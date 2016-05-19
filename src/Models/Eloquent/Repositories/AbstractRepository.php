@@ -22,6 +22,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
     public function find($id)
     {
         return $this->model->find($id);
+
     }
 
     public function findAll()
@@ -40,8 +41,8 @@ abstract class AbstractRepository implements BaseRepositoryInterface
                     }
                 }
                 if (!$found){
-                    $message = "Error $dataKey not fillable: ".get_class($this);
-                    throw new \Exception($message);
+                    $message = "Error $dataKey not fillable: ".serialize($this->model->getFillable()).' --- Class:'.get_class($this);
+                    throw new \RuntimeException($message);
                 }
             }
         return $this->model->create($data);
@@ -112,6 +113,36 @@ abstract class AbstractRepository implements BaseRepositoryInterface
             $message = 'Model: ' . get_class($this->model) . "\nRepository findOneBy() error: " . get_class($this) . "\nCriteria: " . serialize($criteria);
             throw new ModelNotFoundException($message);
         }else return $first;
+    }
+
+    public function findOneOrFail($id)
+    {
+        $result = $this->findBy($id)->first();
+
+        if (is_array($id)) {
+            if (count($result) == count(array_unique($id))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }
+
+        throw new \Exception('Falha no findOneOrFail');
+    }
+
+    public function findOrFail($id)
+    {
+        $result = $this->find($id);
+
+        if (is_array($id)) {
+            if (count($result) == count(array_unique($id))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }
+
+        throw new \Exception('Falha no findOrFail');
     }
 
     // from Doctrine

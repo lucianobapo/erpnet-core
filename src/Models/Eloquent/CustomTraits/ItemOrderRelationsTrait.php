@@ -4,6 +4,8 @@ namespace ErpNET\App\Models\Eloquent\CustomTraits;
 
 use ErpNET\App\Models\Eloquent\CostAllocate;
 use ErpNET\App\Models\Eloquent\Order;
+use ErpNET\App\Models\Eloquent\Product;
+use ErpNET\App\Models\Eloquent\SharedCurrency;
 
 trait ItemOrderRelationsTrait
 {
@@ -40,7 +42,7 @@ trait ItemOrderRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product() {
-//        return $this->belongsTo(ErpNET\App\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     /**
@@ -49,7 +51,7 @@ trait ItemOrderRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function currency() {
-//        return $this->belongsTo(ErpNET\App\Models\SharedCurrency::class);
+        return $this->belongsTo(SharedCurrency::class);
     }
 
 }

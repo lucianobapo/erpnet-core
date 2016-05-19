@@ -2,6 +2,7 @@
 
 namespace ErpNET\Tests;
 
+use Doctrine\ORM\EntityManager;
 use ErpNET\Tests\Classes\Application;
 use ErpNET\Tests\Classes\Traits\DatabaseTransactions;
 use ErpNET\Tests\Classes\Traits\TestPrepare;
@@ -20,9 +21,13 @@ class TestCase extends Test
      */
     protected $baseUrl = 'http://localhost';
 
+    protected $entityManager;
+
     protected $testClass = null;
+    protected $testServiceClass = null;
 
     protected $repo = null;
+    protected $service = null;
 
     /**
      * Creates the application.
@@ -55,6 +60,7 @@ class TestCase extends Test
         $this->loadRegisterProviders();
         $this->loadSignatures();
         $this->loadRepo();
+        $this->loadService();
         parent::setUp();
 
         $this->prepareForTests();

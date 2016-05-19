@@ -72,4 +72,14 @@ class ProductRepositoryEloquent extends AbstractRepository implements ProductRep
     {
         $this->model->status()->attach($stat->id, ['product_id'=>$product->id]);
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\CostAllocate | \ErpNET\App\Models\Doctrine\Entities\CostAllocate $costAllocate
+     * @param \ErpNET\App\Models\Eloquent\Product | \ErpNET\App\Models\Doctrine\Entities\Product $product
+     */
+    public function addCostAllocateToProduct($costAllocate, $product)
+    {
+        $product->cost()->associate($costAllocate);
+        $product->save();
+    }
 }

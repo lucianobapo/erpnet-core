@@ -11,31 +11,26 @@ namespace ErpNET\App\Models\Doctrine\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use ErpNET\App\Models\Doctrine\CustomTraits\MandanteTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ErpNET\App\Models\Doctrine\Entities\Address
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="AddressRepository")
  * @ORM\Table(name="addresses", indexes={@ORM\Index(name="addresses_mandante_index", columns={"mandante"}), @ORM\Index(name="addresses_partner_id_index", columns={"partner_id"}), @ORM\Index(name="addresses_deleted_at_index", columns={"deleted_at"})})
  */
-class Address
+class Address extends EntityBase
 {
+    use MandanteTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $deleted_at;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    protected $mandante;
 
     /**
      * @ORM\Column(type="integer", nullable=true, options={"unsigned":true})
@@ -125,42 +120,6 @@ class Address
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of deleted_at.
-     *
-     * @param \DateTime $deleted_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\Address
-     */
-    public function setDeletedAt($deleted_at)
-    {
-        $this->deleted_at = $deleted_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of deleted_at.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deleted_at;
-    }
-
-    /**
-     * Set the value of mandante.
-     *
-     * @param string $mandante
-     * @return \ErpNET\App\Models\Doctrine\Entities\Address
-     */
-    public function setMandante($mandante)
-    {
-        $this->mandante = $mandante;
-
-        return $this;
     }
 
     /**

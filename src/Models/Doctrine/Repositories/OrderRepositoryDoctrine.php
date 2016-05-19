@@ -3,10 +3,8 @@
 namespace ErpNET\App\Models\Doctrine\Repositories;
 
 use ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface;
-use DebugBar\DataCollector\PDO\PDOCollector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use DebugBar\DataCollector\PDO\TraceablePDO;
 
 /**
  * Class OrderRepositoryDoctrine
@@ -62,4 +60,95 @@ class OrderRepositoryDoctrine extends BaseEntityRepository implements OrderRepos
 
     }
 
+    public function addOrderToItem($order, $itemOrder)
+    {
+        $itemOrder->setOrder($order);
+        $this->_em->persist($itemOrder);
+        $this->_em->flush();
+
+        if (empty($order->valor_total))
+            $order->setValorTotal($itemOrder->quantidade * $itemOrder->valor_unitario);
+        else
+            $order->setValorTotal($order->valor_total+($itemOrder->quantidade * $itemOrder->valor_unitario));        $this->_em->persist($order);
+        $this->_em->flush();
+
+//        return $itemOrder;
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Doctrine\Entities\Address|\ErpNET\App\Models\Eloquent\Address $address
+     * @param \ErpNET\App\Models\Doctrine\Entities\Order|\ErpNET\App\Models\Eloquent\Order $order
+     */
+    public function addAddressToOrder($address, $order)
+    {
+        $order->setAddress($address);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+
+//        return $order;
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\Order | \ErpNET\App\Models\Doctrine\Entities\Order $order
+     */
+    public function addPartnerToOrder($partner, $order)
+    {
+        $order->setPartner($partner);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\SharedOrderPayment | \ErpNET\App\Models\Doctrine\Entities\SharedOrderPayment $sharedOrderPayment
+     * @param \ErpNET\App\Models\Eloquent\Order | \ErpNET\App\Models\Doctrine\Entities\Order $order
+     */
+    public function addSharedOrderPaymentToOrder($sharedOrderPayment, $order)
+    {
+        $order->setSharedOrderPayment($sharedOrderPayment);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\SharedOrderType | \ErpNET\App\Models\Doctrine\Entities\SharedOrderType $sharedOrderType
+     * @param \ErpNET\App\Models\Eloquent\Order | \ErpNET\App\Models\Doctrine\Entities\Order $order
+     */
+    public function addSharedOrderTypeToOrder($sharedOrderType, $order)
+    {
+        $order->setSharedOrderType($sharedOrderType);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Order | \ErpNET\App\Models\Doctrine\Entities\Order $order
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $sharedStat
+     */
+    public function addOrderToStat($order, $sharedStat)
+    {
+        $ownerEntity = $this->resolveEntityManyToMany($sharedStat, 'orderSharedStats');
+        $ownerEntity->setSharedStat($sharedStat);
+        $ownerEntity->setOrder($order);
+        $this->_em->persist($ownerEntity);
+        $this->_em->flush();
+
+//        return $ownerEntity;
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\SharedCurrency | \ErpNET\App\Models\Doctrine\Entities\SharedCurrency $sharedCurrency
+     * @param \ErpNET\App\Models\Eloquent\Order | \ErpNET\App\Models\Doctrine\Entities\Order $order
+     */
+    public function addSharedCurrencyToOrder($sharedCurrency, $order)
+    {
+        $order->setSharedCurrency($sharedCurrency);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+    }
 }

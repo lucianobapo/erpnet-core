@@ -11,26 +11,27 @@ namespace ErpNET\App\Models\Doctrine\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use ErpNET\App\Models\Doctrine\CustomTraits\MandanteTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * ErpNET\App\Models\Doctrine\Entities\Partner
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="PartnerRepository")
  * @ORM\Table(name="partners", indexes={@ORM\Index(name="partners_mandante_index", columns={"mandante"}), @ORM\Index(name="partners_user_id_index", columns={"user_id"}), @ORM\Index(name="partners_old_id_index", columns={"old_id"}), @ORM\Index(name="partners_deleted_at_index", columns={"deleted_at"})})
  */
 class Partner extends EntityBase
 {
+    use MandanteTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    protected $mandante;
 
     /**
      * @ORM\Column(type="integer", nullable=true, options={"unsigned":true})
@@ -130,29 +131,6 @@ class Partner extends EntityBase
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of mandante.
-     *
-     * @param string $mandante
-     * @return \ErpNET\App\Models\Doctrine\Entities\Partner
-     */
-    public function setMandante($mandante)
-    {
-        $this->mandante = $mandante;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of mandante.
-     *
-     * @return string
-     */
-    public function getMandante()
-    {
-        return $this->mandante;
     }
 
     /**

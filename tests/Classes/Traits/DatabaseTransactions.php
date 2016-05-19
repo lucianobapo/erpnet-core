@@ -20,20 +20,21 @@ trait DatabaseTransactions
      */
     public function beginDatabaseTransaction()
     {
-        try_call('loadRepo', $this);
-
-        if (!is_null($this->repo)){
-            if ($this->repo instanceof \Doctrine\ORM\EntityRepository) {
+//        try_call('loadRepo', $this);
+        if (!is_null($this->app)){
+//            if ($this->repo instanceof \Doctrine\ORM\EntityRepository) {
+            if (config('erpnet.orm')=='doctrine') {
                 foreach ($this->connectionsToTransact() as $name) {
-                    $this->repo->em->getConnection($name)->beginTransaction(); // suspend auto-commit
+                    $this->app->em->getConnection($name)->beginTransaction(); // suspend auto-commit
                 }
 
                 $this->beforeApplicationDestroyed(function () {
                     foreach ($this->connectionsToTransact() as $name) {
-                        $this->repo->em->getConnection($name)->rollBack();
+                        $this->app->em->getConnection($name)->rollBack();
                     }
                 });
-            }elseif ($this->repo->model instanceof \Illuminate\Database\Eloquent\Model) {
+//            }elseif ($this->repo->model instanceof \Illuminate\Database\Eloquent\Model) {
+            }elseif (config('erpnet.orm')=='eloquent') {
                 $database = $this->app->make('db');
 
                 foreach ($this->connectionsToTransact() as $name) {
@@ -46,6 +47,8 @@ trait DatabaseTransactions
                     }
                 });
             }
+        } else {
+            throw new \RuntimeException('Not Loaded app');
         }
     }
 }

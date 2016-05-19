@@ -2,6 +2,7 @@
 
 namespace ErpNET\App\Models\Eloquent\CustomTraits;
 
+use ErpNET\App\Models\Eloquent\Contact;
 use ErpNET\App\Models\Eloquent\Order;
 
 trait PartnerRelationsTrait
@@ -54,7 +55,10 @@ trait PartnerRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function contacts(){
-//        return $this->hasMany(ErpNET\App\Models\Contact::class);
+        return $this->hasMany(Contact::class);
+    }
+    public function getContacts(){
+        return $this->contacts();
     }
 
     /**

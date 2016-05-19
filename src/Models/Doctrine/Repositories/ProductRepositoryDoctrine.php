@@ -134,4 +134,16 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
 
         return $ownerEntity;
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\CostAllocate | \ErpNET\App\Models\Doctrine\Entities\CostAllocate $costAllocate
+     * @param \ErpNET\App\Models\Eloquent\Product | \ErpNET\App\Models\Doctrine\Entities\Product $product
+     */
+    public function addCostAllocateToProduct($costAllocate, $product)
+    {
+        $product->setCostAllocate($costAllocate);
+
+        $this->_em->persist($product);
+        $this->_em->flush();
+    }
 }

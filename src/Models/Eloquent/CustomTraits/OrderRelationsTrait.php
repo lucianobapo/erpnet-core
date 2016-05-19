@@ -2,9 +2,13 @@
 
 namespace ErpNET\App\Models\Eloquent\CustomTraits;
 
-use ErpNET\ErpNET\App\Models\Eloquent\ItemOrder;
-use ErpNET\ErpNET\App\Models\Eloquent\Partner;
-use ErpNET\ErpNET\App\Models\Eloquent\SharedOrderType;
+use ErpNET\App\Models\Eloquent\Address;
+use ErpNET\App\Models\Eloquent\ItemOrder;
+use ErpNET\App\Models\Eloquent\Partner;
+use ErpNET\App\Models\Eloquent\SharedCurrency;
+use ErpNET\App\Models\Eloquent\SharedOrderPayment;
+use ErpNET\App\Models\Eloquent\SharedOrderType;
+use ErpNET\App\Models\Eloquent\SharedStat;
 
 trait OrderRelationsTrait
 {
@@ -23,7 +27,7 @@ trait OrderRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function address() {
-//        return $this->belongsTo(ErpNET\App\Models\Address::class);
+        return $this->belongsTo(Address::class);
     }
 
     /**
@@ -32,7 +36,7 @@ trait OrderRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function currency() {
-//        return $this->belongsTo(ErpNET\App\Models\SharedCurrency::class);
+        return $this->belongsTo(SharedCurrency::class);
     }
 
     /**
@@ -45,12 +49,30 @@ trait OrderRelationsTrait
     }
 
     /**
+     * An Order belongs to an Order Type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sharedOrderType() {
+        return $this->type();
+    }
+
+    /**
      * An Order belongs to an Order Payment.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function payment() {
-//        return $this->belongsTo(ErpNET\App\Models\SharedOrderPayment::class,'payment_id');
+        return $this->belongsTo(SharedOrderPayment::class,'payment_id');
+    }
+
+    /**
+     * An Order belongs to an Order Payment.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sharedOrderPayment() {
+        return $this->payment();
     }
 
 
@@ -60,7 +82,7 @@ trait OrderRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function status() {
-//        return $this->belongsToMany(ErpNET\App\Models\SharedStat::class)->withTimestamps();
+        return $this->belongsToMany(SharedStat::class)->withTimestamps();
     }
 
     /**

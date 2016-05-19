@@ -8,5 +8,9 @@ namespace ErpNET\App\Interfaces;
  */
 interface OrderServiceInterface
 {
-    public function createOrderWithJson($data);
+    /**
+     * @param string $data
+     * @return string
+     */
+    public function createDeliverySalesOrderWithJson($data);
 }

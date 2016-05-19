@@ -12,5 +12,14 @@ use ErpNET\App\Models\RepositoryLayer\PartnerRepositoryInterface;
 
 class PartnerRepositoryDoctrine extends BaseEntityRepository implements PartnerRepositoryInterface
 {
-
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'mandante',
+//        'user_id',
+        'nome',
+//        'data_nascimento',
+//        'observacao',
+    ];
 }

@@ -27,6 +27,10 @@ interface BaseRepositoryInterface
 
     public function findOneBy(array $criteria);
 
+    public function findOneOrFail($id);
+
+    public function findOrFail($id);
+
     public function __call($method, $arguments);
 
     public function paginate($pages);

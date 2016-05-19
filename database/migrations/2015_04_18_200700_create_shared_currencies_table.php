@@ -21,7 +21,7 @@ class CreateSharedCurrenciesTable extends BaseMigration {
 			$table->softDeletes();
 
 			$table->string('nome_universal', 3);
-			$table->string('descricao');
+			$table->string('descricao')->nullable();
 		});
 
 

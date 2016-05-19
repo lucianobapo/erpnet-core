@@ -21,13 +21,13 @@ class ItemOrder extends Model
      * @var array
      */
     protected $fillable = [
-//        'mandante',
+        'mandante',
 //        'order_id',
 //        'cost_id',
 //        'product_id',
 //        'currency_id',
-//        'quantidade',
-//        'valor_unitario',
+        'quantidade',
+        'valor_unitario',
 //        'desconto_unitario',
 //        'descricao',
     ];

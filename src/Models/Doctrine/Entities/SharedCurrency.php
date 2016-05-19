@@ -11,14 +11,16 @@ namespace ErpNET\App\Models\Doctrine\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ErpNET\App\Models\Doctrine\Entities\SharedCurrency
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="SharedCurrencyRepository")
  * @ORM\Table(name="shared_currencies")
  */
-class SharedCurrency
+class SharedCurrency extends EntityBase
 {
     /**
      * @ORM\Id
@@ -26,21 +28,6 @@ class SharedCurrency
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated_at;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $deleted_at;
 
     /**
      * @ORM\Column(type="string", length=3)
@@ -91,75 +78,6 @@ class SharedCurrency
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of created_at.
-     *
-     * @param \DateTime $created_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\SharedCurrency
-     */
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of created_at.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set the value of updated_at.
-     *
-     * @param \DateTime $updated_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\SharedCurrency
-     */
-    public function setUpdatedAt($updated_at)
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of updated_at.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
-    /**
-     * Set the value of deleted_at.
-     *
-     * @param \DateTime $deleted_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\SharedCurrency
-     */
-    public function setDeletedAt($deleted_at)
-    {
-        $this->deleted_at = $deleted_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of deleted_at.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deleted_at;
     }
 
     /**

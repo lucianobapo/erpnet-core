@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SharedOrderType extends Model
 {
     use SoftDeletes;
+//    use MandanteTrait;
+//    use GridSortingTrait;
+//    use SharedOrderTypeEloquentTrait;
     use SharedOrderTypeRelationsTrait;
 
     protected $fillable = [
-//        'tipo',
-//        'descricao',
+        'tipo',
+        'descricao',
     ];
-
-
-
 }

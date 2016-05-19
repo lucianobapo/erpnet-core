@@ -95,14 +95,45 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
     public function find($id, $lockMode = null, $lockVersion = null)
     {
         $found = parent::find($id, $lockMode, $lockVersion);
-        if ($this->_em->getFilters()->isEnabled('soft-deleteable')){
+        if (!is_null($found) && $this->_em->getFilters()->isEnabled('soft-deleteable')){
             if (try_call('isDeleted', $found)===true) return null;
             else return $found;
         } else return $found;
     }
 
+    public function findOrFail($id)
+    {
+        $result = $this->find($id);
+
+        if (is_array($id)) {
+            if (count($result) == count(array_unique($id))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }
+
+        throw new \Exception('Falha no findOrFail');
+    }
+
+    public function findOneOrFail($id)
+    {
+        $result = $this->findOneBy($id);
+
+        if (is_array($id)) {
+            if (count($result) == count(array_unique($id))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }
+
+        throw new \Exception('Falha no findOneOrFail');
+    }
+
     public function create(array $data)
     {
+        $data = $this->mapMandanteData($data);
         $this->entity = new $this->model;
         $this->mapFillable($data);
         $this->_em->persist($this->entity);
@@ -137,7 +168,11 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 
     public function firstOrCreate(array $data)
     {
-//        return $this->model->firstOrCreate($data);
+        if (! is_null($instance = $this->findOneBy($data))) {
+            return $instance;
+        }
+
+        return $this->create($data);
     }
 
     public function delete($id)
@@ -164,6 +199,22 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 //        return $this->model->paginate($pages);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model | \ErpNET\App\Models\Doctrine\Entities\EntityBase $entity
+     * @param string | array $fields
+     * @return \Illuminate\Database\Eloquent\Model | \ErpNET\App\Models\Doctrine\Entities\EntityBase
+     */
+    protected function resolveEntityManyToMany($entity, $fields) {
+        $annInfo = $this->getAnnotations($entity, $fields);
+        $array = explode("\\", $this->model);
+        array_pop($array);
+        array_push($array, $annInfo[0]->targetEntity);
+        implode("\\",$array);
+        $class = implode("\\",$array);
+
+        return new $class;
+    }
+
     public function getAnnotations($entity, $fields){
         if (is_array($fields)){
             $return = [];
@@ -185,5 +236,14 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
             return false;
         }
         return $docReader->getPropertyAnnotations($reflect->getProperty($field));
+    }
+
+    protected function mapMandanteData($data)
+    {
+        $object = new $this->model;
+        if (!isset($data['mandante']) && method_exists($object, 'setMandante') && is_callable([$object, 'setMandante'])){
+            $data['mandante']='guest';
+        }
+        return $data;
     }
 }

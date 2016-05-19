@@ -17,6 +17,9 @@ trait ProductRelationsTrait
     public function cost() {
         return $this->belongsTo(CostAllocate::class);
     }
+    public function costAllocate() {
+        return $this->cost();
+    }
 
     /**
      * Partner can have many orders.

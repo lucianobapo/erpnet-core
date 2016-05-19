@@ -43,8 +43,47 @@ class ErpnetServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \ErpNET\App\Models\RepositoryLayer\ItemOrderRepositoryInterface::class,
+            \ErpNET\App\Models\RepositoryLayer\SharedCurrencyRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\SharedCurrencyRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\SharedCurrencyRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\SharedCurrency::class
+            ])
+        );
 
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\SharedOrderTypeRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\SharedOrderTypeRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\SharedOrderTypeRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\SharedOrderType::class
+            ])
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\SharedOrderPaymentRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\SharedOrderPaymentRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\SharedOrderPaymentRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\SharedOrderPayment::class
+            ])
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\AddressRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\AddressRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\AddressRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\Address::class
+            ])
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\ContactRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\ContactRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\ContactRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\Contact::class
+            ])
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\ItemOrderRepositoryInterface::class,
             check_orm(\ErpNET\App\Models\Eloquent\Repositories\ItemOrderRepositoryEloquent::class,[
                 'repository' => \ErpNET\App\Models\Doctrine\Repositories\ItemOrderRepositoryDoctrine::class,
                 'entity' => \ErpNET\App\Models\Doctrine\Entities\ItemOrder::class
@@ -105,6 +144,14 @@ class ErpnetServiceProvider extends ServiceProvider
             check_orm(\ErpNET\App\Models\Eloquent\Repositories\ProductSharedStatRepositoryEloquent::class,[
                 'repository' => \ErpNET\App\Models\Doctrine\Repositories\ProductSharedStatRepositoryDoctrine::class,
                 'entity' => \ErpNET\App\Models\Doctrine\Entities\ProductSharedStat::class
+            ])
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\OrderSharedStatRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\OrderSharedStatRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\OrderSharedStatRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\OrderSharedStat::class
             ])
         );
 
