@@ -65,11 +65,9 @@ class OrderRepositoryDoctrine extends BaseEntityRepository implements OrderRepos
         $itemOrder->setOrder($order);
         $this->_em->persist($itemOrder);
         $this->_em->flush();
-
-        if (empty($order->valor_total))
-            $order->setValorTotal($itemOrder->quantidade * $itemOrder->valor_unitario);
-        else
-            $order->setValorTotal($order->valor_total+($itemOrder->quantidade * $itemOrder->valor_unitario));        $this->_em->persist($order);
+        $toAdded = $itemOrder->quantidade * $itemOrder->valor_unitario;
+        $order->setValorTotal($order->valor_total+$toAdded);
+        $this->_em->persist($order);
         $this->_em->flush();
 
 //        return $itemOrder;

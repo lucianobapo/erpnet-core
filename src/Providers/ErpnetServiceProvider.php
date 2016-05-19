@@ -3,6 +3,8 @@
 namespace ErpNET\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
+use LaravelDoctrine\ORM\DoctrineServiceProvider;
 
 class ErpnetServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,9 @@ class ErpnetServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__."/../../database/migrations" => database_path("migrations")
         ], 'migrations');
+
+        $this->app->register(DoctrineServiceProvider::class);
+        $this->app->register(GedmoExtensionsServiceProvider::class);
     }
 
     /**
