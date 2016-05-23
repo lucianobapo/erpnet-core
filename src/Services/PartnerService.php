@@ -71,7 +71,7 @@ class PartnerService implements PartnerServiceInterface
     public function jsonPartnerProviderId($id)
     {
         $userRecord = $this->userRepository->findOneBy(['provider_id'=>$id]);
-        if (is_null($userRecord->partner)) {
+        if (is_null($userRecord) || empty($userRecord->partner)) {
             return json_encode([
                 'error' => true,
                 'message' => 'Partner with provider_id '.$id.' not found.',
