@@ -95,7 +95,7 @@ class Partner extends EntityBase
     protected $partnerSharedStats;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="partners")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="partners")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;

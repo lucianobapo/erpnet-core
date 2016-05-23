@@ -19,4 +19,22 @@ class PartnerRepositoryEloquent extends AbstractRepository implements PartnerRep
         $this->table = $model->getTable();
     }
 
+    /**
+     * @param int $id
+     * @return \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner
+     */
+    public function userFindProviderId($id)
+    {
+        // TODO: Implement userFindProviderId() method.
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\User | \ErpNET\App\Models\Doctrine\Entities\User $user
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     */
+    public function addUserToPartner($user, $partner)
+    {
+        $partner->user()->associate($user);
+        $partner->save();
+    }
 }

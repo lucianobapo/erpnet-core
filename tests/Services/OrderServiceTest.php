@@ -73,7 +73,7 @@ class OrderServiceTest extends ServiceTestCase
         ]);
         $this->assertNotNull($productRecord);
         $instance = $repoProduct->model;
-        if (!is_string($instance)) $instance = get_class($repoProduct->model);
+        if (!is_string($instance)) $instance = get_class($instance);
         $this->assertInstanceOf($instance, $productRecord);
 
         //Create CostAllocate

@@ -11,26 +11,25 @@ namespace ErpNET\App\Models\Doctrine\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use ErpNET\App\Models\Doctrine\CustomTraits\MandanteTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ErpNET\App\Models\Doctrine\Entities\User
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="users", indexes={@ORM\Index(name="users_mandante_index", columns={"mandante"}), @ORM\Index(name="users_role_id_index", columns={"role_id"}), @ORM\Index(name="users_deleted_at_index", columns={"deleted_at"})}, uniqueConstraints={@ORM\UniqueConstraint(name="users_email_unique", columns={"email"}), @ORM\UniqueConstraint(name="users_provider_id_unique", columns={"provider_id"})})
  */
-class User
+class User extends EntityBase
 {
+    use MandanteTrait;
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    protected $mandante;
 
     /**
      * @ORM\Column(name="`name`", type="string", length=255)
@@ -83,30 +82,14 @@ class User
     protected $remember_token;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated_at;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $deleted_at;
-
-    /**
      * @ORM\Column(type="integer", nullable=true, options={"unsigned":true})
      */
     protected $role_id;
 
     /**
-     * @ORM\OneToMany(targetEntity="Partner", mappedBy="user")
-     * @ORM\JoinColumn(name="id", referencedColumnName="user_id", nullable=false)
+     * @ORM\OneToOne(targetEntity="Partner", mappedBy="user")
      */
-    protected $partners;
+    protected $partner;
 
     /**
      * @ORM\ManyToOne(targetEntity="Role", inversedBy="users")
@@ -116,7 +99,7 @@ class User
 
     public function __construct()
     {
-        $this->partners = new ArrayCollection();
+//        $this->partners = new ArrayCollection();
     }
 
     /**
@@ -140,29 +123,6 @@ class User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of mandante.
-     *
-     * @param string $mandante
-     * @return \ErpNET\App\Models\Doctrine\Entities\User
-     */
-    public function setMandante($mandante)
-    {
-        $this->mandante = $mandante;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of mandante.
-     *
-     * @return string
-     */
-    public function getMandante()
-    {
-        return $this->mandante;
     }
 
     /**
@@ -396,75 +356,6 @@ class User
     }
 
     /**
-     * Set the value of created_at.
-     *
-     * @param \DateTime $created_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\User
-     */
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of created_at.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set the value of updated_at.
-     *
-     * @param \DateTime $updated_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\User
-     */
-    public function setUpdatedAt($updated_at)
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of updated_at.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
-    /**
-     * Set the value of deleted_at.
-     *
-     * @param \DateTime $deleted_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\User
-     */
-    public function setDeletedAt($deleted_at)
-    {
-        $this->deleted_at = $deleted_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of deleted_at.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deleted_at;
-    }
-
-    /**
      * Set the value of role_id.
      *
      * @param integer $role_id
@@ -488,14 +379,15 @@ class User
     }
 
     /**
-     * Add Partner entity to collection (one to many).
+     * Set Partner entity (one to one).
      *
      * @param \ErpNET\App\Models\Doctrine\Entities\Partner $partner
      * @return \ErpNET\App\Models\Doctrine\Entities\User
      */
-    public function addPartner(Partner $partner)
+    public function setPartner(Partner $partner = null)
     {
-        $this->partners[] = $partner;
+        $partner->setUser($this);
+        $this->partner = $partner;
 
         return $this;
     }
@@ -506,21 +398,31 @@ class User
      * @param \ErpNET\App\Models\Doctrine\Entities\Partner $partner
      * @return \ErpNET\App\Models\Doctrine\Entities\User
      */
-    public function removePartner(Partner $partner)
-    {
-        $this->partners->removeElement($partner);
-
-        return $this;
-    }
+//    public function removePartner(Partner $partner)
+//    {
+//        $this->partners->removeElement($partner);
+//
+//        return $this;
+//    }
 
     /**
      * Get Partner entity collection (one to many).
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getPartners()
+//    public function getPartners()
+//    {
+//        return $this->partners;
+//    }
+
+    /**
+     * Get Partner entity (one to one).
+     *
+     * @return \ErpNET\App\Models\Doctrine\Entities\Partner
+     */
+    public function getPartner()
     {
-        return $this->partners;
+        return $this->partner;
     }
 
     /**

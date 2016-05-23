@@ -11,31 +11,25 @@
 |
 */
 
-$class = App::make(ErpNET\App\Models\RepositoryLayer\PartnerRepositoryInterface::class);
+$class = App::make(ErpNET\App\Models\RepositoryLayer\UserRepositoryInterface::class);
 
 if ($class->model instanceof Illuminate\Database\Eloquent\Model)
     $factory->define(get_class($class->model), function (Faker\Generator $faker) {
         return [
             //'user_id' => 'factory|App\Models\User',
             'mandante' => $faker->word,
-            'nome' => $faker->name(),
-            'data_nascimento' => $faker->date(),
-            'observacao' => $faker->text(),
+            'name' => $faker->name,
+            'email' => $faker->email,
+            'provider' => $faker->word,
+            'provider_id' => $faker->randomNumber(),
         ];
     });
 elseif ($class instanceof Doctrine\ORM\EntityRepository) {
     \League\FactoryMuffin\Facade::define(($class->model), array(
         'mandante' => 'word',
-        'nome'   => 'sentence',
-        'observacao'   => 'sentence',
-//        'created_at' => function ($object, $saved) {
-//            return \Carbon\Carbon::now();
-//        },
-//        'updated_at' => function ($object, $saved) {
-//            return \Carbon\Carbon::now();
-//        },
-        'data_nascimento' => function ($object, $saved) {
-            return \Carbon\Carbon::now();
-        },
+        'name'   => 'sentence',
+        'email'   => 'email',
+        'provider'   => 'word',
+        'provider_id' => 'randomNumber',
     ));
 }

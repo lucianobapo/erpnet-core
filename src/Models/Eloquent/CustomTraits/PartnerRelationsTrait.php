@@ -4,6 +4,7 @@ namespace ErpNET\App\Models\Eloquent\CustomTraits;
 
 use ErpNET\App\Models\Eloquent\Contact;
 use ErpNET\App\Models\Eloquent\Order;
+use ErpNET\App\Models\Eloquent\User;
 
 trait PartnerRelationsTrait
 {
@@ -30,7 +31,7 @@ trait PartnerRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user() {
-//        return $this->belongsTo(ErpNET\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**

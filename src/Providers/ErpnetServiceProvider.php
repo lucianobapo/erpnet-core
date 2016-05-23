@@ -46,6 +46,18 @@ class ErpnetServiceProvider extends ServiceProvider
             \ErpNET\App\Interfaces\OrderServiceInterface::class,
             \ErpNET\App\Services\OrderService::class
         );
+        $this->app->bind(
+            \ErpNET\App\Interfaces\PartnerServiceInterface::class,
+            \ErpNET\App\Services\PartnerService::class
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\UserRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\UserRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\UserRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\User::class
+            ])
+        );
 
         $this->app->bind(
             \ErpNET\App\Models\RepositoryLayer\SharedCurrencyRepositoryInterface::class,
