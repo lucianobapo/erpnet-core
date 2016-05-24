@@ -23,7 +23,7 @@ use ErpNET\App\Models\RepositoryLayer\SharedStatRepositoryInterface;
 class PartnerService implements PartnerServiceInterface
 {
 
-//    protected $partnerRepository;
+    protected $partnerRepository;
     protected $userRepository;
 //    protected $orderRepository;
 //    protected $itemOrderRepository;
@@ -31,25 +31,25 @@ class PartnerService implements PartnerServiceInterface
 //    protected $sharedOrderTypeRepository;
 //    protected $sharedCurrencyRepository;
 //    protected $sharedStatRepository;
-//    protected $addressRepository;
-//    protected $contactRepository;
+    protected $addressRepository;
+    protected $contactRepository;
 
     public function __construct(
-//        PartnerRepositoryInterface $partnerRepository,
-        UserRepositoryInterface $userRepository
+        PartnerRepositoryInterface $partnerRepository,
+        UserRepositoryInterface $userRepository,
 //        OrderRepositoryInterface $orderRepository,
 //        ItemOrderRepositoryInterface $itemOrderRepository,
 //        SharedOrderPaymentRepositoryInterface $sharedOrderPaymentRepository,
 //        SharedOrderTypeRepositoryInterface $sharedOrderTypeRepository,
 //        SharedCurrencyRepositoryInterface $sharedCurrencyRepository,
 //        SharedStatRepositoryInterface $sharedStatRepository,
-//        AddressRepositoryInterface $addressRepository,
-//        ContactRepositoryInterface $contactRepository
+        AddressRepositoryInterface $addressRepository,
+        ContactRepositoryInterface $contactRepository
 //        CostAllocateRepositoryInterface $costAllocateRepository,
 //        Carbon $carbon
     )
     {
-//        $this->partnerRepository = $partnerRepository;
+        $this->partnerRepository = $partnerRepository;
         $this->userRepository = $userRepository;
 //        $this->orderRepository = $orderRepository;
 //        $this->itemOrderRepository = $itemOrderRepository;
@@ -57,8 +57,8 @@ class PartnerService implements PartnerServiceInterface
 //        $this->sharedOrderTypeRepository = $sharedOrderTypeRepository;
 //        $this->sharedCurrencyRepository = $sharedCurrencyRepository;
 //        $this->sharedStatRepository = $sharedStatRepository;
-//        $this->addressRepository = $addressRepository;
-//        $this->contactRepository = $contactRepository;
+        $this->addressRepository = $addressRepository;
+        $this->contactRepository = $contactRepository;
 //        $this->costAllocateRepository = $costAllocateRepository;
 //        $this->carbon = $carbon;
     }
@@ -71,17 +71,38 @@ class PartnerService implements PartnerServiceInterface
     public function jsonPartnerProviderId($id)
     {
         $userRecord = $this->userRepository->findOneBy(['provider_id'=>$id]);
-        if (is_null($userRecord) || empty($userRecord->partner)) {
+        $partnerRecord = is_null($userRecord)?null:$this->partnerRepository->findOneBy(['user_id'=>$userRecord->id]);
+        $contacts = is_null($partnerRecord)?null:$this->contactRepository->findBy(['partner_id'=>$partnerRecord->id]);
+        $addresses = is_null($partnerRecord)?null:$this->addressRepository->findBy(['partner_id'=>$partnerRecord->id]);
+
+        if (is_null($userRecord) || is_null($partnerRecord)) {
             return json_encode([
                 'error' => true,
                 'message' => 'Partner with provider_id '.$id.' not found.',
             ]);
         }else{
-            return json_encode([
+            $fields = [
                 'error' => false,
-                'partner_id' => $userRecord->partner->id,
-//                'message' => 'Partner with provider_id '.$id.' not found.',
-            ]);
+                'partner_id' => $partnerRecord->id,
+                'partner_nome' => $partnerRecord->nome,
+                'partner_data_nascimento' => $partnerRecord->data_nascimento,
+                'message' => 'Partner with provider_id ' . $id . ' found.',
+            ];
+            foreach ($contacts as $contact) {
+                $fields['partner_'.str_plural($contact->contact_type)][] = $contact->contact_data;
+            }
+            foreach ($addresses as $address) {
+                $fields['partner_addresses'][] = [
+                    'cep' => $address->cep,
+                    'logradouro' => $address->logradouro,
+                    'numero' => $address->numero,
+                    'bairro' => $address->bairro,
+                    'complemento' => $address->complemento,
+                ];
+            }
+
+//            var_dump($fields);
+            return json_encode($fields);
         }
     }
 }
