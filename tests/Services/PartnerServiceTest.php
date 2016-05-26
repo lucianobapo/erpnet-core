@@ -63,7 +63,6 @@ class PartnerServiceTest extends ServiceTestCase
         $repoAddress->addPartnerToAddress($recordPartner, $recordAddress);
 
         $foundPartner = $this->service->jsonPartnerProviderId($recordUser->provider_id);
-
         $this->assertJson($foundPartner);
     }
 }

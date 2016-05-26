@@ -86,7 +86,7 @@ class PartnerService implements PartnerServiceInterface
                 'error' => false,
                 'partner_id' => $partnerRecord->id,
                 'partner_nome' => $partnerRecord->nome,
-                'partner_data_nascimento' => Carbon::parse($partnerRecord->data_nascimento)->format('dd/MM/yyyy'),
+                'partner_data_nascimento' => Carbon::parse($partnerRecord->data_nascimento)->format('d/m/Y'),
                 'message' => 'Partner with provider_id ' . $id . ' found.',
             ];
             foreach ($contacts as $contact) {
