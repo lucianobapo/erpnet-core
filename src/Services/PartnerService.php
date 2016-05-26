@@ -8,6 +8,7 @@
 
 namespace ErpNET\App\Services;
 
+use Carbon\Carbon;
 use ErpNET\App\Interfaces\PartnerServiceInterface;
 use ErpNET\App\Models\RepositoryLayer\UserRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface;
@@ -85,7 +86,7 @@ class PartnerService implements PartnerServiceInterface
                 'error' => false,
                 'partner_id' => $partnerRecord->id,
                 'partner_nome' => $partnerRecord->nome,
-                'partner_data_nascimento' => $partnerRecord->data_nascimento,
+                'partner_data_nascimento' => Carbon::parse($partnerRecord->data_nascimento)->format('dd/MM/yyyy'),
                 'message' => 'Partner with provider_id ' . $id . ' found.',
             ];
             foreach ($contacts as $contact) {

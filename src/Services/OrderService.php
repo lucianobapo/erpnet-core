@@ -96,9 +96,15 @@ class OrderService implements OrderServiceInterface
             ]);
             $this->orderRepository->addSharedOrderPaymentToOrder($sharedOrderPaymentRecord, $orderRecord);
 
-            $partnerRecord = $this->partnerRepository->create([
-                'nome' => $objectData->nome,
-            ]);
+            $partnerRecord = null;
+            if (isset($objectData->partner_id)) $partnerRecord = $this->partnerRepository->find($objectData->partner_id);
+            if (is_null($partnerRecord)){
+                $fields = [
+                    'nome' => $objectData->nome,
+                ];
+                if (isset($objectData->data_nascimento)) $fields['data_nascimento'] = $objectData->data_nascimento;
+                $partnerRecord = $this->partnerRepository->create($fields);
+            }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
 
             if (property_exists($objectData, 'email')){
@@ -122,7 +128,6 @@ class OrderService implements OrderServiceInterface
                 ]);
                 $this->contactRepository->addPartnerToContact($partnerRecord, $contactRecord);
             }
-
 
             $addressRecord = $this->addressRepository->create([
                 'cep' => $objectData->cep,
