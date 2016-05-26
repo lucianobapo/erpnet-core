@@ -82,11 +82,12 @@ class PartnerService implements PartnerServiceInterface
                 'message' => 'Partner with provider_id '.$id.' not found.',
             ]);
         }else{
+//            var_dump(Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'));
             $fields = [
                 'error' => false,
                 'partner_id' => $partnerRecord->id,
                 'partner_nome' => $partnerRecord->nome,
-                'partner_data_nascimento' => Carbon::parse($partnerRecord->data_nascimento)->format('d/m/Y'),
+                'partner_data_nascimento' => Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'),
                 'message' => 'Partner with provider_id ' . $id . ' found.',
             ];
             foreach ($contacts as $contact) {
