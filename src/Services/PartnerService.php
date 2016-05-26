@@ -83,11 +83,14 @@ class PartnerService implements PartnerServiceInterface
             ]);
         }else{
 //            var_dump(Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'));
+//            var_dump($partnerRecord->getFormattedDataNascimento());
+//            var_dump(Carbon::createFromFormat('d/m/Y',$partnerRecord->getFormattedDataNascimento()));
             $fields = [
                 'error' => false,
                 'partner_id' => $partnerRecord->id,
                 'partner_nome' => $partnerRecord->nome,
-                'partner_data_nascimento' => Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'),
+//                'partner_data_nascimento' => Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'),
+                'partner_data_nascimento' => $partnerRecord->getFormattedDataNascimento(),
                 'message' => 'Partner with provider_id ' . $id . ' found.',
             ];
             foreach ($contacts as $contact) {

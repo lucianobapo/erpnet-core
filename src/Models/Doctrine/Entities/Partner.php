@@ -201,6 +201,10 @@ class Partner extends EntityBase
     {
         return $this->data_nascimento;
     }
+    public function getFormattedDataNascimento()
+    {
+        return $this->data_nascimento->format('d/m/Y');
+    }
 
     /**
      * Set the value of observacao.

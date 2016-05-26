@@ -56,4 +56,8 @@ class Partner extends Model
         return Carbon::parse($this->attributes['data_nascimento']);
     }
 
+    public function getFormattedDataNascimento() {
+        return Carbon::parse($this->attributes['data_nascimento'])->format('d/m/Y');
+    }
+
 }

@@ -102,7 +102,7 @@ class OrderService implements OrderServiceInterface
                 $fields = [
                     'nome' => $objectData->nome,
                 ];
-                if (isset($objectData->data_nascimento)) $fields['data_nascimento'] = $objectData->data_nascimento;
+                if (isset($objectData->data_nascimento)) $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
                 $partnerRecord = $this->partnerRepository->create($fields);
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
