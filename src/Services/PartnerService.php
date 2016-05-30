@@ -98,6 +98,7 @@ class PartnerService implements PartnerServiceInterface
             }
             foreach ($addresses as $address) {
                 $fields['partner_addresses'][] = [
+                    'id' => $address->id,
                     'cep' => $address->cep,
                     'logradouro' => $address->logradouro,
                     'numero' => $address->numero,
