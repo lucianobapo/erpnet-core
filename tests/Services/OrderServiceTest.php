@@ -15,6 +15,7 @@ class OrderServiceTest extends ServiceTestCase
 //    protected $testClass = OrderServiceInterface::class;
 
     protected $mock = array (
+        'mandante' => 'teste',
         'pagamento' => 'debito',
         'address_id' => false,
         'cep' => '28893280',

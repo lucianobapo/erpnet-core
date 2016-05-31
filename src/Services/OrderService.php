@@ -73,6 +73,7 @@ class OrderService implements OrderServiceInterface
             $objectData = json_decode($data);
 
             $orderRecord = $this->orderRepository->create([
+                'mandante' => $objectData->mandante,
                 'posted_at' => Carbon::now(),
             ]);
 
@@ -100,6 +101,7 @@ class OrderService implements OrderServiceInterface
             if (isset($objectData->partner_id)) $partnerRecord = $this->partnerRepository->find($objectData->partner_id);
             if (is_null($partnerRecord)){
                 $fields = [
+                    'mandante' => $objectData->mandante,
                     'nome' => $objectData->nome,
                 ];
                 if (isset($objectData->data_nascimento)) $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
@@ -109,6 +111,7 @@ class OrderService implements OrderServiceInterface
 
             if (property_exists($objectData, 'email')){
                 $contactRecord = $this->contactRepository->create([
+                    'mandante' => $objectData->mandante,
                     'contact_type' => 'email',
                     'contact_data' => $objectData->email,
                 ]);
@@ -116,6 +119,7 @@ class OrderService implements OrderServiceInterface
             }
             if (property_exists($objectData, 'telefone')){
                 $contactRecord = $this->contactRepository->create([
+                    'mandante' => $objectData->mandante,
                     'contact_type' => 'telefone',
                     'contact_data' => $objectData->telefone,
                 ]);
@@ -123,6 +127,7 @@ class OrderService implements OrderServiceInterface
             }
             if (property_exists($objectData, 'whatsapp')){
                 $contactRecord = $this->contactRepository->create([
+                    'mandante' => $objectData->mandante,
                     'contact_type' => 'whatsapp',
                     'contact_data' => $objectData->whatsapp,
                 ]);
@@ -131,6 +136,7 @@ class OrderService implements OrderServiceInterface
 
             if ($objectData->address_id===false){
                 $addressRecord = $this->addressRepository->create([
+                    'mandante' => $objectData->mandante,
                     'cep' => $objectData->cep,
                     'logradouro' => $objectData->endereco,
                     'bairro' => $objectData->bairro,
@@ -146,11 +152,13 @@ class OrderService implements OrderServiceInterface
 
             foreach ($objectData->itens as $item) {
                 $itemOrderRecord = $this->itemOrderRepository->create([
+                    'mandante' => $objectData->mandante,
                     'quantidade' => $item->quantidade,
                     'valor_unitario' => $item->valor,
                 ]);
 
                 $productRecord = $this->productRepository->findOneOrFail([
+//                    'mandante' => $objectData->mandante,
                     'id' => $item->id,
                 ]);
 
