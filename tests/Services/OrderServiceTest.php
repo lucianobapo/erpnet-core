@@ -16,6 +16,7 @@ class OrderServiceTest extends ServiceTestCase
 
     protected $mock = array (
         'mandante' => 'teste',
+        'obsevacao' => 'obs',
         'pagamento' => 'debito',
         'address_id' => false,
         'cep' => '28893280',

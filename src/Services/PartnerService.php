@@ -73,7 +73,7 @@ class PartnerService implements PartnerServiceInterface
     {
         $userRecord = $this->userRepository->findOneBy(['provider_id'=>$id]);
         $partnerRecord = is_null($userRecord)?null:$this->partnerRepository->findOneBy(['user_id'=>$userRecord->id]);
-        $contacts = is_null($partnerRecord)?null:$this->contactRepository->findBy(['partner_id'=>$partnerRecord->id]);
+        $contacts = is_null($partnerRecord)?null:$this->contactRepository->findBy(['partner_id'=>$partnerRecord->id],['id'=>'desc']);
         $addresses = is_null($partnerRecord)?null:$this->addressRepository->findBy(['partner_id'=>$partnerRecord->id],['id'=>'desc']);
 
         if (is_null($userRecord) || is_null($partnerRecord)) {

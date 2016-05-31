@@ -34,7 +34,7 @@ class Order extends Model
 //        'troco',
 //        'descricao',
 //        'referencia',
-//        'obsevacao'
+        'obsevacao'
     ];
 
     /**

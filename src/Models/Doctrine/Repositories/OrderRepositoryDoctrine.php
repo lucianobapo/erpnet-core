@@ -28,7 +28,7 @@ class OrderRepositoryDoctrine extends BaseEntityRepository implements OrderRepos
 //        'troco',
 //        'descricao',
 //        'referencia',
-//        'obsevacao'
+        'obsevacao'
     ];
 
     public function collectionOrdersItemsCosts()

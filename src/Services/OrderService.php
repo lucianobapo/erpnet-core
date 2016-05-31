@@ -72,10 +72,12 @@ class OrderService implements OrderServiceInterface
         try{
             $objectData = json_decode($data);
 
-            $orderRecord = $this->orderRepository->create([
+            $orderFields = [
                 'mandante' => $objectData->mandante,
                 'posted_at' => Carbon::now(),
-            ]);
+            ];
+            if (property_exists($objectData, 'obsevacao')) $orderFields['obsevacao'] = $objectData->obsevacao;
+            $orderRecord = $this->orderRepository->create($orderFields);
 
             $sharedStatRecord = $this->sharedStatRepository->firstOrCreate([
                 'status' => 'aberto',
@@ -98,13 +100,13 @@ class OrderService implements OrderServiceInterface
             $this->orderRepository->addSharedOrderPaymentToOrder($sharedOrderPaymentRecord, $orderRecord);
 
             $partnerRecord = null;
-            if (isset($objectData->partner_id)) $partnerRecord = $this->partnerRepository->find($objectData->partner_id);
+            if (property_exists($objectData, 'partner_id')) $partnerRecord = $this->partnerRepository->find($objectData->partner_id);
             if (is_null($partnerRecord)){
                 $fields = [
                     'mandante' => $objectData->mandante,
                     'nome' => $objectData->nome,
                 ];
-                if (isset($objectData->data_nascimento)) $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
+                if (property_exists($objectData, 'data_nascimento')) $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
                 $partnerRecord = $this->partnerRepository->create($fields);
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
