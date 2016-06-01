@@ -45,7 +45,7 @@ class CreateOrdersTable extends BaseMigration {
 
             $table->text('descricao')->nullable();
             $table->string('referencia')->nullable();
-            $table->string('obsevacao')->nullable();
+            $table->string('observacao')->nullable();
 
             //temporario
             $table->integer('old_id')->index()->nullable();

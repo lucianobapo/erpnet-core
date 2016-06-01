@@ -93,7 +93,7 @@ class Order extends EntityBase
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $obsevacao;
+    protected $observacao;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -462,26 +462,26 @@ class Order extends EntityBase
     }
 
     /**
-     * Set the value of obsevacao.
+     * Set the value of observacao.
      *
-     * @param string $obsevacao
+     * @param string $observacao
      * @return \ErpNET\App\Models\Doctrine\Entities\Order
      */
-    public function setObsevacao($obsevacao)
+    public function setObservacao($observacao)
     {
-        $this->obsevacao = $obsevacao;
+        $this->observacao = $observacao;
 
         return $this;
     }
 
     /**
-     * Get the value of obsevacao.
+     * Get the value of observacao.
      *
      * @return string
      */
-    public function getObsevacao()
+    public function getObservacao()
     {
-        return $this->obsevacao;
+        return $this->observacao;
     }
 
     /**

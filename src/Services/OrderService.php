@@ -76,7 +76,7 @@ class OrderService implements OrderServiceInterface
                 'mandante' => $objectData->mandante,
                 'posted_at' => Carbon::now(),
             ];
-            if (property_exists($objectData, 'obsevacao')) $orderFields['obsevacao'] = $objectData->obsevacao;
+            if (property_exists($objectData, 'observacao')) $orderFields['observacao'] = $objectData->observacao;
             $orderRecord = $this->orderRepository->create($orderFields);
 
             $sharedStatRecord = $this->sharedStatRepository->firstOrCreate([
