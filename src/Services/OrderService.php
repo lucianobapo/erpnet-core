@@ -136,17 +136,18 @@ class OrderService implements OrderServiceInterface
                 $this->contactRepository->addPartnerToContact($partnerRecord, $contactRecord);
             }
 
-            if ($objectData->address_id===false){
-                $addressRecord = $this->addressRepository->create([
-                    'mandante' => $objectData->mandante,
-                    'cep' => $objectData->cep,
-                    'logradouro' => $objectData->endereco,
-                    'bairro' => $objectData->bairro,
-                    'numero' => $objectData->numero,
-                ]);
-            } else {
+            if (property_exists($objectData, 'address_id')){
                 $addressRecord = $this->addressRepository->find($objectData->address_id);
-                if (is_null($addressRecord)) throw new \Exception('Address ID not found: '.$objectData->address_id);
+                if (is_null($addressRecord)){
+                    $addressRecord = $this->addressRepository->create([
+                        'mandante' => $objectData->mandante,
+                        'cep' => $objectData->cep,
+                        'logradouro' => $objectData->endereco,
+                        'bairro' => $objectData->bairro,
+                        'numero' => $objectData->numero,
+                    ]);
+                }
+                if (is_null($addressRecord)) throw new \Exception('Error with address_id: '.$objectData->address_id);
             }
 
             $this->addressRepository->addPartnerToAddress($partnerRecord, $addressRecord);
