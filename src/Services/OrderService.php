@@ -20,9 +20,11 @@ use ErpNET\App\Models\RepositoryLayer\SharedOrderPaymentRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedOrderTypeRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedCurrencyRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedStatRepositoryInterface;
+use ErpNET\App\Models\RepositoryLayer\UserRepositoryInterface;
 
 class OrderService implements OrderServiceInterface
 {
+    protected $userRepository;
     protected $partnerRepository;
     protected $productRepository;
     protected $orderRepository;
@@ -35,6 +37,7 @@ class OrderService implements OrderServiceInterface
     protected $contactRepository;
 
     public function __construct(
+        UserRepositoryInterface $userRepository,
         PartnerRepositoryInterface $partnerRepository,
         ProductRepositoryInterface $productRepository,
         OrderRepositoryInterface $orderRepository,
@@ -49,6 +52,7 @@ class OrderService implements OrderServiceInterface
 //        Carbon $carbon
     )
     {
+        $this->userRepository = $userRepository;
         $this->partnerRepository = $partnerRepository;
         $this->productRepository = $productRepository;
         $this->orderRepository = $orderRepository;
@@ -110,6 +114,29 @@ class OrderService implements OrderServiceInterface
                 $partnerRecord = $this->partnerRepository->create($fields);
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
+
+            if (property_exists($objectData, 'userID')) {
+                $userRecord = null;
+                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->userID]);
+                if (is_null($userRecord)){
+                    $fields = [
+                        'mandante' => $objectData->mandante,
+                        'name' => $objectData->name,
+                        'avatar' => $objectData->picture,
+                        'email' => $objectData->email,
+                        'provider' => 'facebook',
+                        'provider_id' => $objectData->userID,
+                    ];
+                    $userRecord = $this->userRepository->create($fields);
+                    $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
+                } else {
+                    logger('Usuário id: '.$partnerRecord->user->id);
+//                    if ($userRecord->id == $partnerRecord->user->id) {
+//
+//                    }
+                }
+            }
+
 
             if (property_exists($objectData, 'email')){
                 $contactRecord = $this->contactRepository->create([
