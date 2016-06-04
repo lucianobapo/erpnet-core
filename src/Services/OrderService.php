@@ -133,7 +133,10 @@ class OrderService implements OrderServiceInterface
                     $userRecord = $this->userRepository->create($fields);
                     $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
                 } else {
-                    logger('Usuário id: '.$partnerRecord->user->id);
+                    logger('Usuário user: ');
+                    logger($userRecord);
+                    logger('Usuário partner: ');
+                    logger($partnerRecord->user);
 //                    if ($userRecord->id == $partnerRecord->user->id) {
 //
 //                    }
