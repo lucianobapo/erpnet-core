@@ -14,6 +14,32 @@ class OrderServiceTest extends ServiceTestCase
     protected $testServiceClass = OrderServiceInterface::class;
 //    protected $testClass = OrderServiceInterface::class;
 
+//    protected $mock = array (
+//        'pagamento' => 'credito',
+//        'address_id' => 'false',
+//        'emailChanged' => 'false',
+//        'cep' => '28893304',
+//        'mandante' => 'ilhanet',
+//        'user_provider_id' => '1375004702814068',
+//        'nome' => 'Audorgil Samoa',
+//        'email' => 'ilhanet.lan@gmail.com',
+//        'endereco' => 'Avenida Brasil',
+//        'bairro' => 'Extensão do Bosque',
+//        'complemento' => '1',
+//        'numero' => '1',
+//        'itens' =>
+//            array (
+//                0 =>
+//                    array (
+//                        'id' => '1',
+//                        'nome' => 'Água Com Gás Schin 500ml',
+//                        'quantidade' => '1',
+//                        'valor' => '4',
+//                        '$$hashKey' => 'object:585',
+//                    ),
+//            ),
+//    );
+
     protected $mock = array (
         'mandante' => 'teste',
         'observacao' => 'obs',
