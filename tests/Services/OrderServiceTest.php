@@ -14,65 +14,65 @@ class OrderServiceTest extends ServiceTestCase
     protected $testServiceClass = OrderServiceInterface::class;
 //    protected $testClass = OrderServiceInterface::class;
 
+    protected $mock = array (
+        'pagamento' => 'credito',
+        'address_id' => 'false',
+        'emailChanged' => 'false',
+        'cep' => '28893304',
+        'mandante' => 'ilhanet',
+        'user_provider_id' => '1375004702814068',
+        'picture' => 'http://graph.facebook.com/1375004702814068/picture?type=large',
+        'nome' => 'Audorgil Samoa',
+        'email' => 'ilhanet.lan@gmail.com',
+        'endereco' => 'Avenida Brasil',
+        'bairro' => 'Extensão do Bosque',
+        'numero' => '1',
+        'itens' =>
+            array (
+                0 =>
+                    array (
+                        'id' => '1',
+                        'nome' => 'Água S/Gás 510ml',
+                        'quantidade' => '1',
+                        'valor' => '3',
+                        '$$hashKey' => 'object:585',
+                    ),
+            ),
+    );
+
 //    protected $mock = array (
-//        'pagamento' => 'credito',
-//        'address_id' => 'false',
-//        'emailChanged' => 'false',
-//        'cep' => '28893304',
-//        'mandante' => 'ilhanet',
-//        'user_provider_id' => '1375004702814068',
-//        'nome' => 'Audorgil Samoa',
-//        'email' => 'ilhanet.lan@gmail.com',
-//        'endereco' => 'Avenida Brasil',
-//        'bairro' => 'Extensão do Bosque',
-//        'complemento' => '1',
-//        'numero' => '1',
+//        'mandante' => 'teste',
+//        'observacao' => 'obs',
+//        'pagamento' => 'debito',
+//        'address_id' => false,
+//        'cep' => '28893280',
 //        'itens' =>
 //            array (
 //                0 =>
 //                    array (
 //                        'id' => '1',
 //                        'nome' => 'Água Com Gás Schin 500ml',
-//                        'quantidade' => '1',
-//                        'valor' => '4',
-//                        '$$hashKey' => 'object:585',
+//                        'quantidade' => '2',
+//                        'valor' => '4.00',
+//                        '$$hashKey' => 'object:527',
+//                    ),
+//                1 =>
+//                    array (
+//                        'id' => '1',
+//                        'nome' => 'Água Com Gás Schin 500ml',
+//                        'quantidade' => '2',
+//                        'valor' => '5.00',
+//                        '$$hashKey' => 'object:527',
 //                    ),
 //            ),
+//        'nome' => 'Angie',
+//        'email' => 'angiemarianne@outlook.com',
+//        'telefone' => '22-999999999',
+//        'whatsapp' => '22-999999999',
+//        'endereco' => 'Avenida Brasil',
+//        'bairro' => 'Extensão do Bosque',
+//        'numero' => '123',
 //    );
-
-    protected $mock = array (
-        'mandante' => 'teste',
-        'observacao' => 'obs',
-        'pagamento' => 'debito',
-        'address_id' => false,
-        'cep' => '28893280',
-        'itens' =>
-            array (
-                0 =>
-                    array (
-                        'id' => '1',
-                        'nome' => 'Água Com Gás Schin 500ml',
-                        'quantidade' => '2',
-                        'valor' => '4.00',
-                        '$$hashKey' => 'object:527',
-                    ),
-                1 =>
-                    array (
-                        'id' => '1',
-                        'nome' => 'Água Com Gás Schin 500ml',
-                        'quantidade' => '2',
-                        'valor' => '5.00',
-                        '$$hashKey' => 'object:527',
-                    ),
-            ),
-        'nome' => 'Angie',
-        'email' => 'angiemarianne@outlook.com',
-        'telefone' => '22-999999999',
-        'whatsapp' => '22-999999999',
-        'endereco' => 'Avenida Brasil',
-        'bairro' => 'Extensão do Bosque',
-        'numero' => '123',
-    );
 
     public function loadSignatures(){
         $this->testFieldsSignature = [

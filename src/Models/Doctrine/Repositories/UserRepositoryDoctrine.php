@@ -19,6 +19,7 @@ class UserRepositoryDoctrine extends BaseEntityRepository implements UserReposit
         'mandante',
         'name',
         'email',
+        'avatar',
         'provider',
         'provider_id',
     ];

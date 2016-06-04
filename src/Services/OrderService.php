@@ -117,23 +117,28 @@ class OrderService implements OrderServiceInterface
 
             if (property_exists($objectData, 'user_provider_id')) {
                 $userRecord = null;
-                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->user_provider_id]);
-                if (is_null($userRecord)){
-                    $fields = [
-                        'mandante' => $objectData->mandante,
-                        'name' => $objectData->nome,
-                        'avatar' => $objectData->picture,
-                        'email' => $objectData->email,
-                        'provider' => 'facebook',
-                        'provider_id' => $objectData->user_provider_id,
-                    ];
-                    $userRecord = $this->userRepository->create($fields);
+                $fields = [
+                    'mandante' => $objectData->mandante,
+                    'name' => $objectData->nome,
+                    'avatar' => $objectData->picture,
+                    'email' => $objectData->email,
+                    'provider' => 'facebook',
+                    'provider_id' => $objectData->user_provider_id,
+                ];
+
+//                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->user_provider_id]);
+                $userRecord = $this->userRepository->firstOrCreate($fields);
+                if (!is_null($userRecord) && ($userRecord!=$partnerRecord->user))
                     $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
+
+                if (is_null($userRecord)){
+//                    $userRecord = $this->userRepository->create($fields);
+//                    $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
                 } else {
-                    logger('Usuário user: ');
-                    logger($userRecord);
-                    logger('Usuário partner: ');
-                    logger($partnerRecord->user);
+//                    var_dump('Usuário user: ');
+//                    var_dump($userRecord==$partnerRecord->user);
+//                    var_dump('Usuário partner: ');
+//                    var_dump($partnerRecord->user);
 //                    if ($userRecord->id == $partnerRecord->user->id) {
 //
 //                    }

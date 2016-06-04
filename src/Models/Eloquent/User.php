@@ -28,6 +28,7 @@ class User extends Model
         'name',
         'email',
         'provider',
+        'avatar',
         'provider_id',
     ];
 
