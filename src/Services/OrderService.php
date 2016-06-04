@@ -115,9 +115,9 @@ class OrderService implements OrderServiceInterface
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
 
-            if (property_exists($objectData, 'userID')) {
+            if (property_exists($objectData, 'user_provider_id')) {
                 $userRecord = null;
-                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->userID]);
+                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->user_provider_id]);
                 if (is_null($userRecord)){
                     $fields = [
                         'mandante' => $objectData->mandante,
