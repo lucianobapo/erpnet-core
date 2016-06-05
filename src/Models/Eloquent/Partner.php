@@ -27,7 +27,7 @@ class Partner extends Model
         'mandante',
 //        'user_id',
         'nome',
-//        'data_nascimento',
+        'data_nascimento',
 //        'observacao',
     ];
 

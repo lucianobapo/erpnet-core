@@ -20,7 +20,7 @@ class PartnerRepositoryDoctrine extends BaseEntityRepository implements PartnerR
         'mandante',
 //        'user_id',
         'nome',
-//        'data_nascimento',
+        'data_nascimento',
 //        'observacao',
     ];
 
