@@ -24,7 +24,7 @@ class OrderServiceTest extends ServiceTestCase
         'user_provider_id' => '1763988013817412',
         'name' => 'Luchiano Knaip',
         'picture' => 'http://graph.facebook.com/1763988013817412/picture?type=large',
-        'email' => 'luciano.pics@gmail.com',
+        'userEmail' => 'luciano.pics@gmail.com',
         'nome' => 'Luchiano Knaip',
         'data_nascimento' => '03/01/1987',
         'endereco' => 'Avenida Brasil',

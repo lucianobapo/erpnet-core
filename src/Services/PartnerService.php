@@ -82,9 +82,6 @@ class PartnerService implements PartnerServiceInterface
                 'message' => 'Partner with provider_id '.$id.' not found.',
             ]);
         }else{
-//            var_dump(Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'));
-//            var_dump($partnerRecord->getFormattedDataNascimento());
-//            var_dump(Carbon::createFromFormat('d/m/Y',$partnerRecord->getFormattedDataNascimento()));
             $fields = [
                 'error' => false,
                 'mandante' => $partnerRecord->mandante,
@@ -108,8 +105,6 @@ class PartnerService implements PartnerServiceInterface
                     'complemento' => $address->complemento,
                 ];
             }
-
-//            var_dump($fields);
             return json_encode($fields);
         }
     }

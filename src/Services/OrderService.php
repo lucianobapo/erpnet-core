@@ -128,33 +128,28 @@ class OrderService implements OrderServiceInterface
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
 
-            if (property_exists($objectData, 'user_provider_id')) {
-                $userRecord = null;
 
-                // Encontra ou cria o registro do usuário
-                if (property_exists($objectData, 'user_id'))
-                    $userRecord = $this->userRepository->find($objectData->user_id);
+            $userRecord = null;
+            // Encontra usuário já criado
+            if (property_exists($objectData, 'user_id'))
+                $userRecord = $this->userRepository->find($objectData->user_id);
 
-                if (is_null($userRecord)){
-                    $fields = [
-                        'mandante' => $objectData->mandante,
-                        'avatar' => $objectData->picture,
-                        'email' => $objectData->email,
-                        'provider' => 'facebook',
-                        'provider_id' => $objectData->user_provider_id,
-                    ];
-                    if (property_exists($objectData, 'nome'))
-                        $fields['name'] = $objectData->nome;
-                    else
-                        $fields['name'] = $objectData->name;
-
-                    $userRecord = $this->userRepository->create($fields);
-                }
-
-                // Associa o usuário ao partner caso nao sejam associados
-                if (!is_null($userRecord) && ($userRecord!=$partnerRecord->user))
-                    $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
+            // Cria usuário com dados do Facebook
+            if (property_exists($objectData, 'user_provider_id') && is_null($userRecord)) {
+                $fields = [
+                    'mandante' => $objectData->mandante,
+                    'name' => $objectData->name,
+                    'avatar' => $objectData->picture,
+                    'email' => $objectData->userEmail,
+                    'provider' => 'facebook',
+                    'provider_id' => $objectData->user_provider_id,
+                ];
+                $userRecord = $this->userRepository->create($fields);
             }
+
+            // Associa o usuário ao partner caso nao sejam associados
+            if (!is_null($userRecord) && ($userRecord!=$partnerRecord->user))
+                $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
 
 
             if (property_exists($objectData, 'email')){
