@@ -88,6 +88,7 @@ class PartnerService implements PartnerServiceInterface
             $fields = [
                 'error' => false,
                 'mandante' => $partnerRecord->mandante,
+                'user_id' => $userRecord->id,
                 'partner_id' => $partnerRecord->id,
                 'partner_nome' => $partnerRecord->nome,
 //                'partner_data_nascimento' => Carbon::createFromTimestamp($partnerRecord->data_nascimento->timestamp)->format('d/m/Y'),

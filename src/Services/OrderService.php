@@ -130,17 +130,22 @@ class OrderService implements OrderServiceInterface
 
             if (property_exists($objectData, 'user_provider_id')) {
                 $userRecord = null;
-                $fields = [
-                    'mandante' => $objectData->mandante,
-                    'name' => $objectData->name,
-                    'avatar' => $objectData->picture,
-                    'email' => $objectData->email,
-                    'provider' => 'facebook',
-                    'provider_id' => $objectData->user_provider_id,
-                ];
 
                 // Encontra ou cria o registro do usuário
-                $userRecord = $this->userRepository->firstOrCreate($fields);
+                if (property_exists($objectData, 'user_id'))
+                    $userRecord = $this->userRepository->find($objectData->user_id);
+
+                if (is_null($userRecord)){
+                    $fields = [
+                        'mandante' => $objectData->mandante,
+                        'name' => $objectData->name,
+                        'avatar' => $objectData->picture,
+                        'email' => $objectData->email,
+                        'provider' => 'facebook',
+                        'provider_id' => $objectData->user_provider_id,
+                    ];
+                    $userRecord = $this->userRepository->create($fields);
+                }
 
                 // Associa o usuário ao partner caso nao sejam associados
                 if (!is_null($userRecord) && ($userRecord!=$partnerRecord->user))
