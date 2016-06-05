@@ -203,7 +203,9 @@ class Partner extends EntityBase
     }
     public function getFormattedDataNascimento()
     {
-        return $this->data_nascimento->format('d/m/Y');
+        if ($this->data_nascimento instanceof \DateTime)
+            return $this->data_nascimento->format('d/m/Y');
+        else return null;
     }
 
     /**

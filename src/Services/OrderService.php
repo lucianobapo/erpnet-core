@@ -88,6 +88,13 @@ class OrderService implements OrderServiceInterface
             ]);
             $this->orderRepository->addOrderToStat($orderRecord, $sharedStatRecord);
 
+            if (property_exists($objectData, 'origem')) {
+                $sharedStatRecordOrigem = $this->sharedStatRepository->firstOrCreate([
+                    'status' => $objectData->origem,
+                ]);
+                $this->orderRepository->addOrderToStat($orderRecord, $sharedStatRecordOrigem);
+            }
+
             $sharedOrderTypeRecord = $this->sharedOrderTypeRepository->firstOrCreate([
                 'tipo' => 'ordemVenda',
             ]);

@@ -20,10 +20,10 @@ class OrderServiceTest extends ServiceTestCase
         'emailChanged' => 'false',
         'cep' => '28893304',
         'mandante' => 'ilhanet',
-        'user_provider_id' => '1375004702814068',
-        'picture' => 'http://graph.facebook.com/1375004702814068/picture?type=large',
-        'nome' => 'Audorgil Samoa',
-        'email' => 'ilhanet.lan@gmail.com',
+        'user_provider_id' => '1763988013817412',
+        'picture' => 'http://graph.facebook.com/1763988013817412/picture?type=large',
+        'nome' => 'Luchiano Knaip',
+        'email' => 'luciano.pics@gmail.com',
         'endereco' => 'Avenida Brasil',
         'bairro' => 'Extensão do Bosque',
         'numero' => '1',
@@ -35,10 +35,36 @@ class OrderServiceTest extends ServiceTestCase
                         'nome' => 'Água S/Gás 510ml',
                         'quantidade' => '1',
                         'valor' => '3',
-                        '$$hashKey' => 'object:585',
+                        '$$hashKey' => 'object:593',
                     ),
             ),
     );
+
+//    protected $mock = array (
+//        'pagamento' => 'credito',
+//        'address_id' => 'false',
+//        'emailChanged' => 'false',
+//        'cep' => '28893304',
+//        'mandante' => 'ilhanet',
+//        'user_provider_id' => '1375004702814068',
+//        'picture' => 'http://graph.facebook.com/1375004702814068/picture?type=large',
+//        'nome' => 'Audorgil Samoa',
+//        'email' => 'ilhanet.lan@gmail.com',
+//        'endereco' => 'Avenida Brasil',
+//        'bairro' => 'Extensão do Bosque',
+//        'numero' => '1',
+//        'itens' =>
+//            array (
+//                0 =>
+//                    array (
+//                        'id' => '1',
+//                        'nome' => 'Água S/Gás 510ml',
+//                        'quantidade' => '1',
+//                        'valor' => '3',
+//                        '$$hashKey' => 'object:585',
+//                    ),
+//            ),
+//    );
 
 //    protected $mock = array (
 //        'mandante' => 'teste',
