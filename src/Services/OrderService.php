@@ -138,12 +138,16 @@ class OrderService implements OrderServiceInterface
                 if (is_null($userRecord)){
                     $fields = [
                         'mandante' => $objectData->mandante,
-                        'name' => $objectData->name,
                         'avatar' => $objectData->picture,
                         'email' => $objectData->email,
                         'provider' => 'facebook',
                         'provider_id' => $objectData->user_provider_id,
                     ];
+                    if (property_exists($objectData, 'nome'))
+                        $fields['name'] = $objectData->nome;
+                    else
+                        $fields['name'] = $objectData->name;
+
                     $userRecord = $this->userRepository->create($fields);
                 }
 

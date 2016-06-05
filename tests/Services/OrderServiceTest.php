@@ -15,18 +15,21 @@ class OrderServiceTest extends ServiceTestCase
 //    protected $testClass = OrderServiceInterface::class;
 
     protected $mock = array (
-        'pagamento' => 'credito',
+        'pagamento' => 'debito',
         'address_id' => 'false',
         'emailChanged' => 'false',
         'cep' => '28893304',
+        'origem' => 'site',
         'mandante' => 'ilhanet',
         'user_provider_id' => '1763988013817412',
+        'name' => 'Luchiano Knaip',
         'picture' => 'http://graph.facebook.com/1763988013817412/picture?type=large',
-        'nome' => 'Luchiano Knaip',
         'email' => 'luciano.pics@gmail.com',
+        'nome' => 'Luchiano Knaip',
+        'data_nascimento' => '03/01/1987',
         'endereco' => 'Avenida Brasil',
         'bairro' => 'Extensão do Bosque',
-        'numero' => '1',
+        'numero' => '123',
         'itens' =>
             array (
                 0 =>
@@ -35,7 +38,7 @@ class OrderServiceTest extends ServiceTestCase
                         'nome' => 'Água S/Gás 510ml',
                         'quantidade' => '1',
                         'valor' => '3',
-                        '$$hashKey' => 'object:593',
+                        '$$hashKey' => 'object:585',
                     ),
             ),
     );
