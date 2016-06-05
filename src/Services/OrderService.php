@@ -132,7 +132,7 @@ class OrderService implements OrderServiceInterface
                 $userRecord = null;
                 $fields = [
                     'mandante' => $objectData->mandante,
-                    'name' => $objectData->nome,
+                    'name' => $objectData->name,
                     'avatar' => $objectData->picture,
                     'email' => $objectData->email,
                     'provider' => 'facebook',
