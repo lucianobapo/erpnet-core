@@ -117,7 +117,13 @@ class OrderService implements OrderServiceInterface
                     'mandante' => $objectData->mandante,
                     'nome' => $objectData->nome,
                 ];
-                if (property_exists($objectData, 'data_nascimento')) $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
+                if (property_exists($objectData, 'data_nascimento')){
+                    if (is_string($objectData->data_nascimento))
+                        $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
+                    if ($objectData->data_nascimento instanceof \DateTime)
+                        $fields['data_nascimento'] = Carbon::instance($objectData->data_nascimento);
+                }
+
                 $partnerRecord = $this->partnerRepository->create($fields);
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
