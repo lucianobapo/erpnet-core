@@ -133,23 +133,12 @@ class OrderService implements OrderServiceInterface
                     'provider_id' => $objectData->user_provider_id,
                 ];
 
-//                $userRecord = $this->userRepository->findOneBy(['provider_id'=>$objectData->user_provider_id]);
+                // Encontra ou cria o registro do usuário
                 $userRecord = $this->userRepository->firstOrCreate($fields);
+
+                // Associa o usuário ao partner caso nao sejam associados
                 if (!is_null($userRecord) && ($userRecord!=$partnerRecord->user))
                     $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
-
-                if (is_null($userRecord)){
-//                    $userRecord = $this->userRepository->create($fields);
-//                    $this->partnerRepository->addUserToPartner($userRecord, $partnerRecord);
-                } else {
-//                    var_dump('Usuário user: ');
-//                    var_dump($userRecord==$partnerRecord->user);
-//                    var_dump('Usuário partner: ');
-//                    var_dump($partnerRecord->user);
-//                    if ($userRecord->id == $partnerRecord->user->id) {
-//
-//                    }
-                }
             }
 
 
