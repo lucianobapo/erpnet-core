@@ -84,13 +84,16 @@ trait OrderRelationsTrait
     public function status() {
         return $this->belongsToMany(SharedStat::class)->withTimestamps();
     }
+    public function orderSharedStats() {
+        return $this->status();
+    }
 
     /**
      * Order can have many items.
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orderItems(){
-        return $this->hasMany(ItemOrder::class);
+        return $this->itemOrders();
     }
 
     /**

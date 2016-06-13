@@ -10,8 +10,11 @@ namespace ErpNET\App\Services;
 
 use Carbon\Carbon;
 use ErpNET\App\Interfaces\OrderServiceInterface;
+use ErpNET\App\Interfaces\SummaryServiceInterface;
+use ErpNET\App\Models\Doctrine\Entities\EntityBase;
 use ErpNET\App\Models\RepositoryLayer\ItemOrderRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface;
+use ErpNET\App\Models\RepositoryLayer\OrderSharedStatRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\PartnerRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\AddressRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\ContactRepositoryInterface;
@@ -20,10 +23,13 @@ use ErpNET\App\Models\RepositoryLayer\SharedOrderPaymentRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedOrderTypeRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedCurrencyRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\SharedStatRepositoryInterface;
+use ErpNET\App\Models\RepositoryLayer\SummaryRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 
 class OrderService implements OrderServiceInterface
 {
+    protected $summaryService;
     protected $userRepository;
     protected $partnerRepository;
     protected $productRepository;
@@ -35,8 +41,12 @@ class OrderService implements OrderServiceInterface
     protected $sharedStatRepository;
     protected $addressRepository;
     protected $contactRepository;
+    protected $summaryRepository;
+
+    public $itemStock;
 
     public function __construct(
+        SummaryServiceInterface $summaryService,
         UserRepositoryInterface $userRepository,
         PartnerRepositoryInterface $partnerRepository,
         ProductRepositoryInterface $productRepository,
@@ -47,11 +57,13 @@ class OrderService implements OrderServiceInterface
         SharedCurrencyRepositoryInterface $sharedCurrencyRepository,
         SharedStatRepositoryInterface $sharedStatRepository,
         AddressRepositoryInterface $addressRepository,
-        ContactRepositoryInterface $contactRepository
+        ContactRepositoryInterface $contactRepository,
+        SummaryRepositoryInterface $summaryRepository
 //        CostAllocateRepositoryInterface $costAllocateRepository,
 //        Carbon $carbon
     )
     {
+        $this->summaryService = $summaryService;
         $this->userRepository = $userRepository;
         $this->partnerRepository = $partnerRepository;
         $this->productRepository = $productRepository;
@@ -63,8 +75,11 @@ class OrderService implements OrderServiceInterface
         $this->sharedStatRepository = $sharedStatRepository;
         $this->addressRepository = $addressRepository;
         $this->contactRepository = $contactRepository;
+        $this->summaryRepository = $summaryRepository;
 //        $this->costAllocateRepository = $costAllocateRepository;
 //        $this->carbon = $carbon;
+
+        $this->itemStock = $this->resumoDasOrdens();
     }
 
     /**
@@ -232,5 +247,65 @@ class OrderService implements OrderServiceInterface
             return $return;
         }
 
+    }
+
+    protected function resumoDasOrdens(){
+//        $ultimoFechamento = $this->periodRepository->getLastPeriodEndDate();
+        $ultimoFechamento = $this->summaryService->lastEnd();
+//        $ultimoFechamento = Carbon::now()->subMonth(1);
+//        $ultimoFechamento = Carbon::now()->subWeek(3);
+//        $ultimoFechamento = Carbon::now()->subDay(21);
+//        $ultimasOrdens = $this->orderRepository->findBy(['posted_at'=>$ultimoFechamento]);
+        $agora = Carbon::now();
+//        $agora = Carbon::now()->subWeek(2);
+//        $agora = Carbon::now()->subDay(20);
+        $ultimasOrdens = $this->orderRepository->between('posted_at', $ultimoFechamento, $agora);
+//        var_dump(count($ultimasOrdens));
+        $arrayOrderSummary = $this->itemStockOfOrders($ultimasOrdens);
+//        var_dump(count($arrayOrderSummary));
+        return $arrayOrderSummary;
+//        $resumoDosPeriodos = $this->periodRepository->getPeriodSummary();
+    }
+
+    private function arrayOrderSummary($orders){
+
+    }
+    private function itemStockOfOrders($orders)
+    {
+        $itemStock = [];
+        foreach ($orders as $order) {
+//            var_dump($order->sharedOrderType->tipo);
+            $calculaOrdem = false;
+            foreach ($order->orderSharedStats as $status) {
+                if (($status instanceof EntityBase) && ($status->sharedStat->status=='finalizado'))
+                    $calculaOrdem = true;
+
+                if (($status instanceof Model) && ($status->status=='finalizado'))
+                    $calculaOrdem = true;
+            }
+            if ($calculaOrdem)
+                foreach ($order->itemOrders as $item) {
+                    if ($order->sharedOrderType->tipo=='ordemVenda'){
+                        if (isset($itemStock[$item->product->id])){
+                            $itemStock[$item->product->id] = $itemStock[$item->product->id] - $item->quantidade;
+                        }else{
+                            $itemStock[$item->product->id] = -$item->quantidade;
+                        }
+                    }elseif ($order->sharedOrderType->tipo=='ordemCompra'){
+                        if (isset($itemStock[$item->product->id])){
+                            $itemStock[$item->product->id] = $itemStock[$item->product->id] + $item->quantidade;
+                        }else{
+                            $itemStock[$item->product->id] = $item->quantidade;
+                        }
+                    }
+        //                var_dump(($item->valor_unitario));
+                }
+//            var_dump(count($order->itemOrders));
+        }
+//        var_dump(count($orders));
+//        var_dump($itemStock);
+//        return [];
+        ksort($itemStock);
+        return $itemStock;
     }
 }

@@ -9,6 +9,11 @@ namespace ErpNET\App\Models\RepositoryLayer;
 interface OrderRepositoryInterface extends BaseRepositoryInterface
 {
     /**
+     * @return \Carbon\Carbon
+     */
+    public function firstOrderPosted();
+
+    /**
      * @param $order
      * @param $itemOrder
      * @return void

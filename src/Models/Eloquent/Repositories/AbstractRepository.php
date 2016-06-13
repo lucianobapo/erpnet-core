@@ -8,8 +8,10 @@
 
 namespace ErpNET\App\Models\Eloquent\Repositories;
 
+use Carbon\Carbon;
 use ErpNET\App\Models\RepositoryLayer\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 abstract class AbstractRepository implements BaseRepositoryInterface
 {
@@ -68,6 +70,24 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         return $this->model->withTrashed()->find($id)->restore();
     }
 
+    public function between($field, Carbon $start, Carbon $end){
+//        DB::enableQueryLog();
+        $model = $this->model;
+        $model = $model->whereBetween($field, array($start, $end));
+        $return = $model->get();
+//        var_dump(DB::getQueryLog()[0]['bindings']);
+        if (count($return)==0){
+            $message = 'Model: ' . get_class($this->model) .
+                "\nRepository ".get_class($this)." error: " .
+                "\nMethod ".__METHOD__." error: " .
+                "\nCriteria: " .
+                "\n - field: " . ($field).
+                "\n - start: " . serialize($start).
+                "\n - end: " . serialize($end);
+            throw new \Exception($message);
+        }else return $return;
+    }
+
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $model = $this->model;
@@ -86,7 +106,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
             foreach ($orderBy as $order) {
                 $model = $model->orderBy($order[0], $order[1]);
             }
-        } elseif (count($orderBy > 1)) {
+        } elseif (count($orderBy) > 1) {
             $model = $model->orderBy($orderBy[0], $orderBy[1]);
         }
 
@@ -101,8 +121,14 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $return = $model->get();
 
         if (count($return)==0){
-            $message = 'Model: ' . get_class($this->model) . "\nRepository findBy() error: " . get_class($this) . "\nCriteria: " . serialize($criteria);
-            throw new ModelNotFoundException($message);
+            $message = 'Model: ' . get_class($this->model) .
+                "\nRepository ".get_class($this)." error: " .
+                "\nMethod ".__METHOD__." error: " .
+                "\nCriteria: " . serialize($criteria).
+                "\n - orderBy: " . serialize($orderBy).
+                "\n - limit: " . serialize($limit).
+                "\n - offset: " . serialize($offset);
+            throw new \Exception($message);
         }else return $return;
     }
 

@@ -9,6 +9,7 @@
 namespace ErpNET\App\Models\Doctrine\Repositories;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use ErpNET\App\Models\Doctrine\Entities\Product;
 use ErpNET\App\Models\RepositoryLayer\ProductRepositoryInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -54,44 +55,28 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
 //        return new ArrayCollection($return);
     }
 
-    public function collectionProductsDelivery($categ = null)
+    public function activatedProducts()
     {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder();
+        $isEq = $qb->expr()->eq('st.status', '?1');
+        if ($this->_em->getFilters()->isEnabled('soft-deleteable')) {
+            $isNull = $qb->expr()->isNull('p.deletedAt');
+            $qb->where($isNull);
+        }
         $qb
             ->select('p')
-            ->from(\ErpNET\App\Models\Doctrine\Entities\Product::class, 'p')
-//            ->leftJoin('p.productProductGroups', 'ppg')
+            ->from(Product::class, 'p')
             ->join('p.productSharedStats', 'pst', 'WITH', 'p.id = pst.product_id')
             ->join('pst.sharedStat', 'st', 'WITH', 'pst.shared_stat_id = st.id')
-            ->where('st.status = ?1')
+            ->where($isEq)
             ->andWhere('p.valorUnitVenda>0')
             ->setParameter(1, 'ativado')
 
             ->orderBy('p.nome', 'ASC')
         ;
-
-        if (!is_null($categ) && ((int)$categ)>0) {
-            $qb->join('p.productProductGroups', 'pg', 'WITH', 'p.id = pg.product_id')
-                ->andWhere('pg.product_group_id = ?2')
-                ->setParameter(2, $categ);
-        }
-
         $query = $qb->getQuery();
-        $queryResult = $query->getArrayResult();
-//        var_dump($queryResult);
-
-        $fractal = new Manager();
-        $resource = new Collection($queryResult, function(array $item) {
-            return [
-                'id'   => $item['id'],
-                'nome'   => $item['nome'],
-                'imagem'   => $item['imagem'],
-                'max' => 3,
-                'valor'   => $item['promocao']?$item['valorUnitVendaPromocao']:$item['valorUnitVenda'],
-            ];
-        });
-        return $fractal->createData($resource)->toJson();
+        $queryResult = $query->getResult();
+        return $queryResult;
     }
 
     public function addProductToGroup($product, $group)
@@ -117,6 +102,7 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
 
     public function addProductToStat($product, $stat)
     {
+
         $fields = 'productSharedStats';
         $annInfo = $this->getAnnotations($stat, $fields);
 

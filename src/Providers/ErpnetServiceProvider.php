@@ -43,12 +43,35 @@ class ErpnetServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
+            \ErpNET\App\Interfaces\ProductServiceInterface::class,
+            \ErpNET\App\Services\ProductService::class
+        );
+        $this->app->bind(
+            \ErpNET\App\Interfaces\SummaryServiceInterface::class,
+            \ErpNET\App\Services\SummaryService::class
+        );
+        $this->app->bind(
             \ErpNET\App\Interfaces\OrderServiceInterface::class,
             \ErpNET\App\Services\OrderService::class
         );
         $this->app->bind(
             \ErpNET\App\Interfaces\PartnerServiceInterface::class,
             \ErpNET\App\Services\PartnerService::class
+        );
+
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\SummaryRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\SummaryRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\SummaryRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\Summary::class
+            ])
+        );
+        $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\SummaryProductContentRepositoryInterface::class,
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\SummaryProductContentRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\SummaryProductContentRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\SummaryProductContent::class
+            ])
         );
 
         $this->app->bind(

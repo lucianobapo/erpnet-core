@@ -2,6 +2,8 @@
 
 namespace ErpNET\App\Models\Doctrine\Repositories;
 
+use Carbon\Carbon;
+use ErpNET\App\Models\Doctrine\Entities\Order;
 use ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
@@ -148,5 +150,30 @@ class OrderRepositoryDoctrine extends BaseEntityRepository implements OrderRepos
 
         $this->_em->persist($order);
         $this->_em->flush();
+    }
+
+    /**
+     * @return \Carbon\Carbon
+     */
+    public function firstOrderPosted()
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $isEq = $qb->expr()->eq('st.status', '?1');
+        if ($this->_em->getFilters()->isEnabled('soft-deleteable')) {
+            $isNull = $qb->expr()->isNull('o.deletedAt');
+            $qb->where($isNull);
+        }
+        $qb
+            ->select('MIN(o.posted_at)')
+            ->from(Order::class, 'o')
+            ->join('o.orderSharedStats', 'ost', 'WITH', 'o.id = ost.order_id')
+            ->join('ost.sharedStat', 'st', 'WITH', 'ost.shared_stat_id = st.id')
+            ->where($isEq)
+            ->setParameter(1, 'finalizado')
+        ;
+        $query = $qb->getQuery();
+        $queryResult = $query->getOneOrNullResult();
+        if (is_null($queryResult[1])) return null;
+        else return Carbon::parse($queryResult[1]);
     }
 }

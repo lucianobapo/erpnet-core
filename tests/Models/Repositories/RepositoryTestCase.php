@@ -34,21 +34,4 @@ class RepositoryTestCase extends TestCase
             }
         }
     }
-
-    protected function factoryTestClass()
-    {
-        $record = factory_orm_create($this->testClass);
-        $repo = $this->app->make($this->testClass);
-        if (!isset($repo->table)) {
-            $this->markTestSkipped(
-                "No table - ".get_class($repo)
-            );
-        }
-        $instance = $repo->model;
-        if (!is_string($instance)) $instance = get_class($instance);
-        $this->assertInstanceOf($instance, $record);
-        $this->assertEquals($repo->find($record->id)->id,$record->id);
-
-        return $record;
-    }
 }

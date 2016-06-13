@@ -29,6 +29,6 @@ elseif ($class instanceof Doctrine\ORM\EntityRepository) {
         'nome'   => 'sentence',
         'promocao'   => 'boolean',
         'estoque'   => 'boolean',
-        'valorUnitVenda'   => 'number',
+        'valorUnitVenda'   => 'randomNumber',
     ));
 }

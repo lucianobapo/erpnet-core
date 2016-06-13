@@ -24,63 +24,47 @@ class ProductRepositoryTest extends RepositoryTestCase
         ];
     }
 
-    public function testIfCollectionProductsDeliveryIsJson(){
-        $this->assertJson($this->repo->collectionProductsDelivery());
-    }
-
-    public function testIfCollectionProductsDeliveryHaveRightFields(){
-        $this->createProductCategoryStatus();
-
-        $return = json_decode($this->repo->collectionProductsDelivery());
-        $this->assertAttributeInternalType('array','data',$return);
-        $this->assertAttributeNotCount(0,'data',$return);
-        foreach ($return->data as $item) {
-            $this->assertAttributeInternalType('int','id',$item);
-            $this->assertAttributeInternalType('string','nome',$item);
-            $this->assertAttributeInternalType('string','imagem',$item);
-            $this->assertAttributeInternalType('int','max',$item);
-            $this->assertAttributeNotEmpty('valor',$item);
-        }
-    }
-
-    public function testIfCollectionProductsDeliveryFilterCategory(){
-        if (!is_null($this->testFieldsSignature)){
-            $this->createProductCategoryStatus($recordProduct, $recordCategory);
-
-            $collection = $this->repo->collectionProductsDelivery($recordCategory->id);
-            $this->assertJson($collection);
-
-            $return = json_decode($collection);
-            $this->assertAttributeInternalType('array','data',$return);
-            $this->assertAttributeNotCount(0,'data',$return);
-            foreach ($return->data as $item) {
-                $this->assertAttributeInternalType('int','id',$item);
-                $this->assertAttributeInternalType('string','nome',$item);
-                $this->assertAttributeInternalType('string','imagem',$item);
-                $this->assertAttributeInternalType('int','max',$item);
-                $this->assertAttributeNotEmpty('valor',$item);
-            }
-        }
-    }
 
     public function testRepositoryAddProductToGroup(){
-        if (!is_null($this->testFieldsSignature)){
-            //Create Product and Category
-            $this->createProductCategory($recordProduct, $recordCategory, $category);
+        //Create Product
+        $this->testClass = ProductRepositoryInterface::class;
+        $recordProduct = $this->factoryTestClass();
+        //Create Category
+        $this->testClass = ProductGroupRepositoryInterface::class;
+        $recordCategory = $this->factoryTestClass(['grupo'=>'Categoria: teste']);
+        //addProductToGroup
+        $repoProduct = $this->app->make(ProductRepositoryInterface::class);
+        $repoProduct->addProductToGroup($recordProduct, $recordCategory);
 
-            $repoProductProductGroup = $this->app->make(ProductProductGroupRepositoryInterface::class);
-            $recordProductProductGroup = $repoProductProductGroup->findOneBy(['product_id'=>$recordProduct->id]);
+        $repoProductProductGroup = $this->app->make(ProductProductGroupRepositoryInterface::class);
+        $recordProductProductGroup = $repoProductProductGroup->findOneBy(['product_id'=>$recordProduct->id]);
 
-            $this->assertNotNull($recordProductProductGroup);
+        $this->assertNotNull($recordProductProductGroup);
+        $instance = $repoProductProductGroup->model;
+        if (!is_string($repoProductProductGroup->model)) $instance = get_class($repoProductProductGroup->model);
+        $this->assertInstanceOf($instance, $recordProductProductGroup);
 
-            $instance = $repoProductProductGroup->model;
-            if (!is_string($repoProductProductGroup->model)) $instance = get_class($repoProductProductGroup->model);
-            $this->assertInstanceOf($instance, $recordProductProductGroup);
+        $this->assertEquals($recordProductProductGroup->product->id, $recordProduct->id);
+        $this->assertEquals($recordProductProductGroup->productGroup->id,$recordCategory->id);
+        $this->assertEquals($recordProductProductGroup->productGroup->grupo,'Categoria: teste');
 
-            $this->assertEquals($recordProductProductGroup->product->id, $recordProduct->id);
-            $this->assertEquals($recordProductProductGroup->productGroup->id,$recordCategory->id);
-            $this->assertEquals($recordProductProductGroup->productGroup->grupo,'Categoria: '.$category);
-        }
+//        if (!is_null($this->testFieldsSignature)){
+//            //Create Product and Category
+//            $this->createProductCategory($recordProduct, $recordCategory, $category);
+//
+//            $repoProductProductGroup = $this->app->make(ProductProductGroupRepositoryInterface::class);
+//            $recordProductProductGroup = $repoProductProductGroup->findOneBy(['product_id'=>$recordProduct->id]);
+//
+//            $this->assertNotNull($recordProductProductGroup);
+//
+//            $instance = $repoProductProductGroup->model;
+//            if (!is_string($repoProductProductGroup->model)) $instance = get_class($repoProductProductGroup->model);
+//            $this->assertInstanceOf($instance, $recordProductProductGroup);
+//
+//            $this->assertEquals($recordProductProductGroup->product->id, $recordProduct->id);
+//            $this->assertEquals($recordProductProductGroup->productGroup->id,$recordCategory->id);
+//            $this->assertEquals($recordProductProductGroup->productGroup->grupo,'Categoria: '.$category);
+//        }
     }
 
     public function testRepositoryAddProductToStat(){
@@ -123,7 +107,6 @@ class ProductRepositoryTest extends RepositoryTestCase
             'mandante' => 'teste',
             'grupo' => 'Categoria: ' . $category,
         ]);
-        $this->repo->addProductToGroup($recordProduct, $recordCategory);
     }
 
     protected function createProductStatus(&$recordProduct = null, &$recordCategory = null, &$recordStat = null, &$stat = null)

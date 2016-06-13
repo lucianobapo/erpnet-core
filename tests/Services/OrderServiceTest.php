@@ -222,4 +222,9 @@ class OrderServiceTest extends ServiceTestCase
             $this->assertEquals($recordOrderSharedStat->sharedStat->id, $recordSharedStat->id);
         }
     }
+
+    public function testResumoDasOrdens(){
+//        $resumoDasOrdens = $this->service->itemStock;
+//        var_dump($resumoDasOrdens);
+    }
 }

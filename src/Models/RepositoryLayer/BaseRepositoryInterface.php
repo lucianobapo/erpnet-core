@@ -1,6 +1,7 @@
 <?php
 
 namespace ErpNET\App\Models\RepositoryLayer;
+use Carbon\Carbon;
 
 /**
  * Interface BaseRepositoryInterface
@@ -26,6 +27,14 @@ interface BaseRepositoryInterface
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     public function findOneBy(array $criteria);
+
+    /**
+     * @param string $field
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     */
+    public function between($field, Carbon $start, Carbon $end);
 
     public function findOneOrFail($id);
 

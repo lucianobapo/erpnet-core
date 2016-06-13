@@ -82,4 +82,18 @@ class ProductRepositoryEloquent extends AbstractRepository implements ProductRep
         $product->cost()->associate($costAllocate);
         $product->save();
     }
+
+    public function activatedProducts()
+    {
+        $queryResult = $this->model
+            ->select('products.*')
+            ->join('product_shared_stat', 'products.id', '=', 'product_shared_stat.product_id')
+            ->join('shared_stats', 'product_shared_stat.shared_stat_id', '=', 'shared_stats.id')
+            ->where('shared_stats.status', '=', 'ativado')
+            ->where('valorUnitVenda', '>', 0)
+            ->orderBy('products.nome');
+
+        $queryResult = $queryResult->get();
+        return $queryResult;
+    }
 }

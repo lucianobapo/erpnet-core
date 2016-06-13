@@ -34,21 +34,4 @@ class ServiceTestCase extends TestCase
             }
         }
     }
-
-    protected function factoryTestClass()
-    {
-        $record = factory_orm_create($this->testClass);
-        $repoPartner = $this->app->make($this->testClass);
-        if (!isset($repoPartner->table)) {
-            $this->markTestSkipped(
-                "No table - ".get_class($repoPartner)
-            );
-        }
-        $instance = $repoPartner->model;
-        if (!is_string($instance)) $instance = get_class($instance);
-        $this->assertInstanceOf($instance, $record);
-        $this->assertEquals($repoPartner->find($record->id)->id,$record->id);
-
-        return $record;
-    }
 }

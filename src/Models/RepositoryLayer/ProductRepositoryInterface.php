@@ -20,5 +20,5 @@ interface ProductRepositoryInterface extends BaseRepositoryInterface
 
     public function collectionProducts();
 
-    public function collectionProductsDelivery($categ = null);
+    public function activatedProducts();
 }

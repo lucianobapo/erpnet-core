@@ -44,6 +44,62 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 
     }
 
+    public function between($field, Carbon $start, Carbon $end){
+        $formatedStart = $start->format('Y-m-d H:i:s');
+        $formatedEnd = $end->format('Y-m-d H:i:s');
+
+//        $em = $this->getEntityManager();
+        $qb = $this->em->createQueryBuilder();
+
+        if ($this->_em->getFilters()->isEnabled('soft-deleteable')) {
+            $isNull = $qb->expr()->isNull('table.deletedAt');
+            $qb->where($isNull);
+        }
+
+//        $between = $qb->expr()->between('table.'.$field, $formatedStart,$formatedEnd);
+        $between = $qb->expr()->between('table.'.$field, '?1', '?2');
+//        var_dump($between);
+//        $gt = $qb->expr()->gt('table.'.$field, '?1');
+//        dd($gt);
+
+//        $queryResult = $this->findBy([$field=>$start]);
+//        dd($queryResult);
+
+        $qb
+            ->select('table')
+            ->from($this->getEntityName(), 'table')
+//            ->where($gt)
+//            ->where($isNull)
+            ->where($between)
+
+            ->setParameter(1, $formatedStart)
+            ->setParameter(2, $formatedEnd)
+//            ->orderBy('p.nome', 'ASC')
+        ;
+        $query = $qb->getQuery();
+//        dd($query);
+//        $parameters = $qb->getParameters();
+//        var_dump($parameters);
+//        $dql = $qb->getDQL();
+//        dd($dql);
+//        $queryResult = $query->getArrayResult();
+        $queryResult = $query->getResult();
+//        dd($queryResult);
+
+        if (count($queryResult)==0){
+            $message = 'Model: ' . get_class($this->model) .
+                "\nRepository ".get_class($this)." error: " .
+                "\nMethod ".__METHOD__." error: " .
+                "\nCriteria: " .
+                "\n - field: " . ($field).
+                "\n - start: " . serialize($start).
+                "\n - end: " . serialize($end);
+            throw new \Exception($message);
+        }else return $queryResult;
+//        return $queryResult;
+//        return null;
+    }
+
     protected function mapFillable($data){
         if (count($this->fillable)==0) {
             $message = 'Error mapFillable(): '.get_class($this);

@@ -57,11 +57,11 @@ trait TestPrepare
         config(['erpnet.orm'=> 'doctrine']);
 //        config(['erpnet.orm'=> 'eloquent']);
 
-        config(['doctrine.managers.default.connection'=> 'sqlite']);
-        config(['database.default'=> 'sqlite']);
+//        config(['doctrine.managers.default.connection'=> 'sqlite']);
+//        config(['database.default'=> 'sqlite']);
 
-//        config(['doctrine.managers.default.connection'=> 'mysql']);
-//        config(['database.default'=> 'mysql']);
+        config(['doctrine.managers.default.connection'=> 'mysql']);
+        config(['database.default'=> 'mysql']);
 
 //        config(['doctrine.managers.default.connection'=> 'sqlite_testing']);
 //        config(['database.default'=> 'sqlite_testing']);
@@ -171,7 +171,7 @@ trait TestPrepare
                         'proxies'    => [
                             'namespace'     => false,
                             'path'          => storage_path('proxies'),
-                            'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
+                            'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', true)
                         ],
                         /*
                         |--------------------------------------------------------------------------
@@ -340,5 +340,22 @@ trait TestPrepare
             }
         }
 //        var_dump('Running tests for ' . config('erpnet.orm') . ' - ' . get_class($this) . ': ' . $this->getName());
+    }
+
+    protected function factoryTestClass($arguments = null)
+    {
+        $record = factory_orm_create($this->testClass, $arguments);
+        $repoPartner = $this->app->make($this->testClass);
+        if (!isset($repoPartner->table)) {
+            $this->markTestSkipped(
+                "No table - ".get_class($repoPartner)
+            );
+        }
+        $instance = $repoPartner->model;
+        if (!is_string($instance)) $instance = get_class($instance);
+        $this->assertInstanceOf($instance, $record);
+        $this->assertEquals($repoPartner->find($record->id)->id,$record->id);
+
+        return $record;
     }
 }
