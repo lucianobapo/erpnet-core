@@ -84,7 +84,8 @@ abstract class AbstractRepository implements BaseRepositoryInterface
                 "\n - field: " . ($field).
                 "\n - start: " . serialize($start).
                 "\n - end: " . serialize($end);
-            throw new \Exception($message);
+//            var_dump($message);
+//            throw new \Exception($message);
         }else return $return;
     }
 
@@ -102,12 +103,12 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 
         $model = $model->where($criteria);
 
-        if (count($orderBy) == 1) {
-            foreach ($orderBy as $order) {
-                $model = $model->orderBy($order[0], $order[1]);
+        if (is_array($orderBy)) {
+            foreach ($orderBy as $campo=>$ordem) {
+                $model = $model->orderBy($campo, $ordem);
             }
-        } elseif (count($orderBy) > 1) {
-            $model = $model->orderBy($orderBy[0], $orderBy[1]);
+        } elseif (is_string($orderBy)) {
+            $model = $model->orderBy($orderBy, 'asc');
         }
 
         if (count($limit)) {
@@ -128,15 +129,23 @@ abstract class AbstractRepository implements BaseRepositoryInterface
                 "\n - orderBy: " . serialize($orderBy).
                 "\n - limit: " . serialize($limit).
                 "\n - offset: " . serialize($offset);
-            throw new \Exception($message);
+            var_dump($message);
+//            throw new \Exception($message);
         }else return $return;
     }
 
     public function findOneBy(array $criteria)
     {
-        $first = $this->findBy($criteria)->first();
+        $findBy = $this->findBy($criteria);
+        if (is_null($findBy)){
+            $message = 'Model: ' . get_class($this->model)
+                . "\nRepository findOneBy() return null: " . get_class($this)
+                . "\nCriteria: " . serialize($criteria);
+            throw new ModelNotFoundException($message);
+        }
+        $first = $findBy->first();
         if (is_null($first)){
-            $message = 'Model: ' . get_class($this->model) . "\nRepository findOneBy() error: " . get_class($this) . "\nCriteria: " . serialize($criteria);
+            $message = 'Model: ' . get_class($this->model) . "\nRepository findOneBy()->first() return null: " . get_class($this) . "\nCriteria: " . serialize($criteria);
             throw new ModelNotFoundException($message);
         }else return $first;
     }

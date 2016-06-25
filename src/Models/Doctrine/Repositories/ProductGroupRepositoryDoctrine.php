@@ -46,14 +46,24 @@ class ProductGroupRepositoryDoctrine extends BaseEntityRepository implements Pro
 
     public function collectionCategorias()
     {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder();
+
+        $isEq = $qb->expr()->eq('st.status', '?1');
+        $isLike = $qb->expr()->like('p.grupo', '?2');
+        if ($this->_em->getFilters()->isEnabled('soft-deleteable')) {
+            $isNull = $qb->expr()->isNull('p.deletedAt');
+            $qb->where($isNull);
+        }
         $qb
             ->select('p')
-            ->from('ErpNET\App\Models\Doctrine\Entities\ProductGroup', 'p')
-            ->where('p.grupo LIKE ?1')
+            ->from(\ErpNET\App\Models\Doctrine\Entities\ProductGroup::class, 'p')
+            ->join('p.productGroupSharedStats', 'pgst', 'WITH', 'p.id = pgst.product_group_id')
+            ->join('pgst.sharedStat', 'st', 'WITH', 'pgst.shared_stat_id = st.id')
+            ->where($isEq)
+            ->andWhere($isLike)
             ->orderBy('p.grupo', 'ASC')
-            ->setParameter(1, 'Categoria:%')
+            ->setParameter(1, 'ativado')
+            ->setParameter(2, 'Categoria:%')
         ;
         $query = $qb->getQuery();
         $queryResult = $query->getArrayResult();
@@ -104,5 +114,29 @@ class ProductGroupRepositoryDoctrine extends BaseEntityRepository implements Pro
             ];
         });
         return $fractal->createData($resource)->toJson();
+    }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\ProductGroup | \ErpNET\App\Models\Doctrine\Entities\ProductGroup $productGroup
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $stat
+     */
+    public function addProductGroupToStat($productGroup, $stat)
+    {
+        $fields = 'productGroupSharedStats';
+        $annInfo = $this->getAnnotations($stat, $fields);
+
+        $array = explode("\\", $this->model);
+        array_pop($array);
+        array_push($array, $annInfo[0]->targetEntity);
+        implode("\\",$array);
+        $class = implode("\\",$array);
+
+        $ownerEntity = new $class;
+        $ownerEntity->setSharedStat($stat);
+        $ownerEntity->setProductGroup($productGroup);
+        $this->_em->persist($ownerEntity);
+        $this->_em->flush();
+
+        return $ownerEntity;
     }
 }

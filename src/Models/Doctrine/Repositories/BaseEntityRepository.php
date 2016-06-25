@@ -48,7 +48,6 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
         $formatedStart = $start->format('Y-m-d H:i:s');
         $formatedEnd = $end->format('Y-m-d H:i:s');
 
-//        $em = $this->getEntityManager();
         $qb = $this->em->createQueryBuilder();
 
         if ($this->_em->getFilters()->isEnabled('soft-deleteable')) {
@@ -87,14 +86,16 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 //        dd($queryResult);
 
         if (count($queryResult)==0){
-            $message = 'Model: ' . get_class($this->model) .
-                "\nRepository ".get_class($this)." error: " .
-                "\nMethod ".__METHOD__." error: " .
+            $model = is_string($this->model)?$this->model:get_class($this->model);
+            $message = 'Model: ' . $model .
+                "\nRepository ".get_class($this).' returned 0 in count($queryResult):'.
+                "\nMethod ".__METHOD__." : " .
                 "\nCriteria: " .
                 "\n - field: " . ($field).
                 "\n - start: " . serialize($start).
                 "\n - end: " . serialize($end);
-            throw new \Exception($message);
+//            var_dump($message);
+//            throw new \Exception($message);
         }else return $queryResult;
 //        return $queryResult;
 //        return null;

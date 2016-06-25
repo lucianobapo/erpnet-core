@@ -76,6 +76,8 @@ class SummaryService implements SummaryServiceInterface
         $lastEnd = $this->summaryRepository->lastSummaryEnd();
         if (is_null($lastEnd))
             $lastEnd = $this->orderRepository->firstOrderPosted();
+        if (is_null($lastEnd))
+            $lastEnd = Carbon::now();
 //        var_dump($lastEnd);
         return $lastEnd;
     }

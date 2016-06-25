@@ -40,6 +40,12 @@ class ProductGroup extends EntityBase
     protected $grupo;
 
     /**
+     * @ORM\OneToMany(targetEntity="ProductGroupSharedStat", mappedBy="productGroup")
+     * @ORM\JoinColumn(name="id", referencedColumnName="product_group_id", nullable=false)
+     */
+    protected $productGroupSharedStats;
+
+    /**
      * @ORM\OneToMany(targetEntity="ProductProductGroup", mappedBy="productGroup")
      * @ORM\JoinColumn(name="id", referencedColumnName="product_group_id", nullable=false)
      */
@@ -47,6 +53,7 @@ class ProductGroup extends EntityBase
 
     public function __construct()
     {
+        $this->productGroupSharedStats = new ArrayCollection();
         $this->productProductGroups = new ArrayCollection();
     }
 
@@ -117,6 +124,42 @@ class ProductGroup extends EntityBase
     public function getGrupo()
     {
         return $this->grupo;
+    }
+
+    /**
+     * Add ProductGroupSharedStat entity to collection (one to many).
+     *
+     * @param \ErpNET\App\Models\Doctrine\Entities\ProductGroupSharedStat $productGroupSharedStat
+     * @return \ErpNET\App\Models\Doctrine\Entities\ProductGroup
+     */
+    public function addProductGroupSharedStat(ProductGroupSharedStat $productGroupSharedStat)
+    {
+        $this->productGroupSharedStats[] = $productGroupSharedStat;
+
+        return $this;
+    }
+
+    /**
+     * Remove ProductGroupSharedStat entity from collection (one to many).
+     *
+     * @param \ErpNET\App\Models\Doctrine\Entities\ProductGroupSharedStat $productGroupSharedStat
+     * @return \ErpNET\App\Models\Doctrine\Entities\ProductGroup
+     */
+    public function removeProductGroupSharedStat(ProductGroupSharedStat $productGroupSharedStat)
+    {
+        $this->productGroupSharedStats->removeElement($productGroupSharedStat);
+
+        return $this;
+    }
+
+    /**
+     * Get ProductGroupSharedStat entity collection (one to many).
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductGroupSharedStats()
+    {
+        return $this->productGroupSharedStats;
     }
 
     /**

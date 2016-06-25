@@ -47,7 +47,8 @@ trait TestPrepare
                 $this->service = $this->app->make($this->testServiceClass);
             } catch (\Exception $e) {
                 $this->service = null;
-                $message = 'Failed to load service: '.get_class($this).' - '.$e->getMessage();
+//                dd($this->app->make($this->testServiceClass));
+                $message = 'Failed to load service: '.get_class($this).' -$this->testServiceClass: '.$this->testServiceClass.' -Error: '.$e->getMessage();
                 throw new \RuntimeException($message);
             }
         }

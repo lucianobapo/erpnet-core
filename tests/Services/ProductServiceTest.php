@@ -30,13 +30,17 @@ class ProductServiceTest extends ServiceTestCase
         $this->testClass = ProductRepositoryInterface::class;
         $recordProduct = $this->factoryTestClass();
 
-        //Create Category
-        $this->testClass = ProductGroupRepositoryInterface::class;
-        $recordCategory = $this->factoryTestClass();
+        // Assertions for Status
+        $repoSharedStat = $this->app->make(SharedStatRepositoryInterface::class);
+        $recordSharedStat = $repoSharedStat->firstOrCreate(['status' => 'ativado']);
+        $this->assertNotNull($recordSharedStat);
 
-        //addProductToGroup
+        //addProductGroupToStat
         $repoProduct = $this->app->make(ProductRepositoryInterface::class);
-        $repoProduct->addProductToGroup($recordProduct, $recordCategory);
+        $repoProduct->addProductToStat($recordProduct, $recordSharedStat);
+
+
+        $this->criarGrupo($recordProduct, ['grupo'=>'Delivery']);
 
         $return = json_decode($this->service->collectionProductsDelivery());
         $this->assertAttributeInternalType('array','data',$return);
@@ -44,7 +48,7 @@ class ProductServiceTest extends ServiceTestCase
         foreach ($return->data as $item) {
             $this->assertAttributeInternalType('int','id',$item);
             $this->assertAttributeInternalType('string','nome',$item);
-            $this->assertAttributeInternalType('string','imagem',$item);
+//            $this->assertAttributeInternalType('string','imagem',$item);
             $this->assertAttributeGreaterThanOrEqual(0,'max',$item);
             $this->assertAttributeGreaterThanOrEqual(0,'valor',$item);
         }
@@ -55,30 +59,17 @@ class ProductServiceTest extends ServiceTestCase
         $this->testClass = ProductRepositoryInterface::class;
         $recordProduct = $this->factoryTestClass();
 
-        //Create Category
-        $this->testClass = ProductGroupRepositoryInterface::class;
-        $recordCategory = $this->factoryTestClass(['grupo'=>'Categoria: teste']);
-        //addProductToGroup
-        $repoProduct = $this->app->make(ProductRepositoryInterface::class);
-        $repoProduct->addProductToGroup($recordProduct, $recordCategory);
+        // Assertions for Status
+        $repoSharedStat = $this->app->make(SharedStatRepositoryInterface::class);
+        $recordSharedStat = $repoSharedStat->firstOrCreate(['status' => 'ativado']);
+        $this->assertNotNull($recordSharedStat);
 
-        //Create Category
-        $this->testClass = ProductGroupRepositoryInterface::class;
-        $repoProductGroup = $this->app->make($this->testClass);
-        if (is_null($recordDelivery = $repoProductGroup->findOneBy(['grupo'=>'Delivery'])))
-            $recordDelivery = $this->factoryTestClass(['grupo'=>'Delivery']);
-        //addProductToGroup
-        $repoProduct = $this->app->make(ProductRepositoryInterface::class);
-        $repoProduct->addProductToGroup($recordProduct, $recordDelivery);
-
-        //Create Category
-        $this->testClass = SharedStatRepositoryInterface::class;
-        $repoSharedStat = $this->app->make($this->testClass);
-        if (is_null($recordSharedStat = $repoSharedStat->findOneBy(['status'=>'ativado'])))
-            $recordSharedStat = $this->factoryTestClass(['status'=>'ativado']);
-        //addProductToStat
+        //addProductGroupToStat
         $repoProduct = $this->app->make(ProductRepositoryInterface::class);
         $repoProduct->addProductToStat($recordProduct, $recordSharedStat);
+
+        $this->criarGrupo($recordProduct, ['grupo'=>'Delivery']);
+        $recordCategory = $this->criarGrupo($recordProduct, ['grupo'=>'Categoria: teste']);
 
         $collection = $this->service->collectionProductsDelivery($recordCategory->id);
         $this->assertJson($collection);
@@ -94,5 +85,35 @@ class ProductServiceTest extends ServiceTestCase
             $this->assertAttributeGreaterThanOrEqual(0,'max',$item);
             $this->assertAttributeGreaterThanOrEqual(0,'valor',$item);
         }
+    }
+
+    /**
+     * @param $recordProduct
+     * @param array $grupo
+     */
+    protected function criarGrupo(&$recordProduct, array $grupo=[])
+    {
+        //Create Category
+        $this->testClass = ProductGroupRepositoryInterface::class;
+        $recordCategory = $this->factoryTestClass($grupo);
+
+        $repoProductGroup = $this->app->make(ProductGroupRepositoryInterface::class);
+        $recordProductGroup = $repoProductGroup->findBy($grupo);
+        $this->assertNotNull($recordProductGroup);
+
+        //addProductToGroup
+        $repoProduct = $this->app->make(ProductRepositoryInterface::class);
+        $repoProduct->addProductToGroup($recordProduct, $recordCategory);
+
+        // Assertions for Status
+        $repoSharedStat = $this->app->make(SharedStatRepositoryInterface::class);
+        $recordSharedStat = $repoSharedStat->firstOrCreate(['status' => 'ativado']);
+        $this->assertNotNull($recordSharedStat);
+
+        //addProductGroupToStat
+        $repoProductGroup = $this->app->make(ProductGroupRepositoryInterface::class);
+        $repoProductGroup->addProductGroupToStat($recordCategory, $recordSharedStat);
+
+        return $recordCategory;
     }
 }

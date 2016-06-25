@@ -88,4 +88,13 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
 
 //        return (json_encode($return));
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\ProductGroup | \ErpNET\App\Models\Doctrine\Entities\ProductGroup $productGroup
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $stat
+     */
+    public function addProductGroupToStat($productGroup, $stat)
+    {
+        $this->model->status()->attach($stat->id, ['product_group_id'=>$productGroup->id]);
+    }
 }

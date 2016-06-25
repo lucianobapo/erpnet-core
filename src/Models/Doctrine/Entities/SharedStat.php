@@ -64,6 +64,12 @@ class SharedStat extends EntityBase
     protected $partnerSharedStats;
 
     /**
+     * @ORM\OneToMany(targetEntity="ProductGroupSharedStat", mappedBy="sharedStat")
+     * @ORM\JoinColumn(name="id", referencedColumnName="shared_stat_id", nullable=false)
+     */
+    protected $productGroupSharedStats;
+
+    /**
      * @ORM\OneToMany(targetEntity="ProductSharedStat", mappedBy="sharedStat")
      * @ORM\JoinColumn(name="id", referencedColumnName="shared_stat_id", nullable=false)
      */
@@ -75,6 +81,7 @@ class SharedStat extends EntityBase
         $this->itemOrderSharedStats = new ArrayCollection();
         $this->orderSharedStats = new ArrayCollection();
         $this->partnerSharedStats = new ArrayCollection();
+        $this->productGroupSharedStats = new ArrayCollection();
         $this->productSharedStats = new ArrayCollection();
     }
 
@@ -289,6 +296,42 @@ class SharedStat extends EntityBase
     public function getPartnerSharedStats()
     {
         return $this->partnerSharedStats;
+    }
+
+    /**
+     * Add ProductGroupSharedStat entity to collection (one to many).
+     *
+     * @param \ErpNET\App\Models\Doctrine\Entities\ProductGroupSharedStat $productGroupSharedStat
+     * @return \ErpNET\App\Models\Doctrine\Entities\SharedStat
+     */
+    public function addProductGroupSharedStat(ProductGroupSharedStat $productGroupSharedStat)
+    {
+        $this->productGroupSharedStats[] = $productGroupSharedStat;
+
+        return $this;
+    }
+
+    /**
+     * Remove ProductGroupSharedStat entity from collection (one to many).
+     *
+     * @param \ErpNET\App\Models\Doctrine\Entities\ProductGroupSharedStat $productGroupSharedStat
+     * @return \ErpNET\App\Models\Doctrine\Entities\SharedStat
+     */
+    public function removeProductGroupSharedStat(ProductGroupSharedStat $productGroupSharedStat)
+    {
+        $this->productGroupSharedStats->removeElement($productGroupSharedStat);
+
+        return $this;
+    }
+
+    /**
+     * Get ProductGroupSharedStat entity collection (one to many).
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductGroupSharedStats()
+    {
+        return $this->productGroupSharedStats;
     }
 
     /**

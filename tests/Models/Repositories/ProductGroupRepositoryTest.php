@@ -2,6 +2,7 @@
 namespace ErpNET\Tests\Models\Repositories;
 
 use ErpNET\App\Models\RepositoryLayer\ProductGroupRepositoryInterface;
+use ErpNET\App\Models\RepositoryLayer\SharedStatRepositoryInterface;
 
 class ProductGroupRepositoryTest extends RepositoryTestCase
 {
@@ -19,22 +20,29 @@ class ProductGroupRepositoryTest extends RepositoryTestCase
     }
 
     public function testIfCollectionCategoriasIsNotEmptyJson(){
-//        var_dump($this->repo->collectionCategorias());
-        if (!is_null($this->testFieldsSignature)){
-            $category = str_random();
-            $this->testFieldsSignature['grupo'] = 'Categoria: '.$category;
-            $record = $this->repo->create($this->testFieldsSignature);
+        $category = str_random();
 
-            $return = json_decode($this->repo->collectionCategorias());
-            $this->assertAttributeInternalType('array','data',$return);
-            $this->assertAttributeNotCount(0,'data',$return);
+        //Create Group
+        $this->testClass = ProductGroupRepositoryInterface::class;
+        $recordProductGroup = $this->factoryTestClass(['grupo'=>'Categoria: '.$category]);
 
-            $findBy = $this->repo->findOneBy(['grupo' => 'Categoria: ' . $category]);
-            $instance = $this->repo->model;
-            if (!is_string($this->repo->model)) $instance = get_class($this->repo->model);
-            $this->assertInstanceOf($instance, $record);
-            $this->assertInstanceOf($instance, $findBy);
-            $this->assertEquals($findBy->id, $record->id);
-        }
+        // Assertions for Status
+        $repoSharedStat = $this->app->make(SharedStatRepositoryInterface::class);
+        $recordSharedStat = $repoSharedStat->firstOrCreate(['status'=>'ativado']);
+        $this->assertNotNull($recordSharedStat);
+
+        //addProductGroupToStat
+        $repoProductGroup = $this->app->make(ProductGroupRepositoryInterface::class);
+        $repoProductGroup->addProductGroupToStat($recordProductGroup, $recordSharedStat);
+
+        $return = json_decode($this->repo->collectionCategorias());
+        $this->assertAttributeInternalType('array','data',$return);
+        $this->assertAttributeNotCount(0,'data',$return);
+        $findBy = $this->repo->findOneBy(['grupo' => 'Categoria: ' . $category]);
+        $instance = $this->repo->model;
+        if (!is_string($this->repo->model)) $instance = get_class($this->repo->model);
+        $this->assertInstanceOf($instance, $recordProductGroup);
+        $this->assertInstanceOf($instance, $findBy);
+        $this->assertEquals($findBy->id, $recordProductGroup->id);
     }
 }

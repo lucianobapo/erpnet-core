@@ -273,35 +273,36 @@ class OrderService implements OrderServiceInterface
     private function itemStockOfOrders($orders)
     {
         $itemStock = [];
-        foreach ($orders as $order) {
-//            var_dump($order->sharedOrderType->tipo);
-            $calculaOrdem = false;
-            foreach ($order->orderSharedStats as $status) {
-                if (($status instanceof EntityBase) && ($status->sharedStat->status=='finalizado'))
-                    $calculaOrdem = true;
+        if (count($orders)>0)
+            foreach ($orders as $order) {
+    //            var_dump($order->sharedOrderType->tipo);
+                $calculaOrdem = false;
+                foreach ($order->orderSharedStats as $status) {
+                    if (($status instanceof EntityBase) && ($status->sharedStat->status=='finalizado'))
+                        $calculaOrdem = true;
 
-                if (($status instanceof Model) && ($status->status=='finalizado'))
-                    $calculaOrdem = true;
-            }
-            if ($calculaOrdem)
-                foreach ($order->itemOrders as $item) {
-                    if ($order->sharedOrderType->tipo=='ordemVenda'){
-                        if (isset($itemStock[$item->product->id])){
-                            $itemStock[$item->product->id] = $itemStock[$item->product->id] - $item->quantidade;
-                        }else{
-                            $itemStock[$item->product->id] = -$item->quantidade;
-                        }
-                    }elseif ($order->sharedOrderType->tipo=='ordemCompra'){
-                        if (isset($itemStock[$item->product->id])){
-                            $itemStock[$item->product->id] = $itemStock[$item->product->id] + $item->quantidade;
-                        }else{
-                            $itemStock[$item->product->id] = $item->quantidade;
-                        }
-                    }
-        //                var_dump(($item->valor_unitario));
+                    if (($status instanceof Model) && ($status->status=='finalizado'))
+                        $calculaOrdem = true;
                 }
-//            var_dump(count($order->itemOrders));
-        }
+                if ($calculaOrdem)
+                    foreach ($order->itemOrders as $item) {
+                        if ($order->sharedOrderType->tipo=='ordemVenda'){
+                            if (isset($itemStock[$item->product->id])){
+                                $itemStock[$item->product->id] = $itemStock[$item->product->id] - $item->quantidade;
+                            }else{
+                                $itemStock[$item->product->id] = -$item->quantidade;
+                            }
+                        }elseif ($order->sharedOrderType->tipo=='ordemCompra'){
+                            if (isset($itemStock[$item->product->id])){
+                                $itemStock[$item->product->id] = $itemStock[$item->product->id] + $item->quantidade;
+                            }else{
+                                $itemStock[$item->product->id] = $item->quantidade;
+                            }
+                        }
+            //                var_dump(($item->valor_unitario));
+                    }
+    //            var_dump(count($order->itemOrders));
+            }
 //        var_dump(count($orders));
 //        var_dump($itemStock);
 //        return [];
