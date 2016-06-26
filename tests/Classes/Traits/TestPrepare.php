@@ -58,11 +58,11 @@ trait TestPrepare
         config(['erpnet.orm'=> 'doctrine']);
 //        config(['erpnet.orm'=> 'eloquent']);
 
-//        config(['doctrine.managers.default.connection'=> 'sqlite']);
-//        config(['database.default'=> 'sqlite']);
+        config(['doctrine.managers.default.connection'=> 'sqlite']);
+        config(['database.default'=> 'sqlite']);
 
-        config(['doctrine.managers.default.connection'=> 'mysql']);
-        config(['database.default'=> 'mysql']);
+//        config(['doctrine.managers.default.connection'=> 'mysql']);
+//        config(['database.default'=> 'mysql']);
 
 //        config(['doctrine.managers.default.connection'=> 'sqlite_testing']);
 //        config(['database.default'=> 'sqlite_testing']);

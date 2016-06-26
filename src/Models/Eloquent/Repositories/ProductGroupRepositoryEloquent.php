@@ -43,40 +43,43 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
         $resource = new Collection($queryResult, function(array $item) {
             $icon = '';
             $nome = substr($item['grupo'], 11);
-            switch (str_slug($nome)){
-                case 'cervejas':
-                    $icon = 'icon ion-beer';
-                    break;
-                case 'outros':
-                    $icon = 'icon fa fa-globe';
-                    break;
-                case 'porcoes':
-                    $icon = 'icon fa fa-cutlery';
-                    break;
-                case 'tabacaria':
-                    $icon = 'icon ion-no-smoking';
-                    break;
-                case 'destilados':
-                    $icon = 'icon ion-android-bar';
-                    break;
-                case 'sucos':
-                    $icon = 'icon ion-ios-pint';
-                    break;
-                case 'energeticos':
-                    $icon = 'icon ion-ios-pint';
-                    break;
-                case 'refrigerantes':
-                    $icon = 'icon ion-ios-pint';
-                    break;
-                case 'vinhos':
-                    $icon = 'icon ion-wineglass';
-                    break;
-                case 'lanches':
-                    $icon = 'icon ion-pizza';
-                    break;
-                default:
-                    break;
-            }
+
+            if (is_null($item['icone']))
+                switch (str_slug($nome)){
+                    case 'cervejas':
+                        $icon = 'icon ion-beer';
+                        break;
+                    case 'outros':
+                        $icon = 'icon fa fa-globe';
+                        break;
+                    case 'porcoes':
+                        $icon = 'icon fa fa-cutlery';
+                        break;
+                    case 'tabacaria':
+                        $icon = 'icon ion-no-smoking';
+                        break;
+                    case 'destilados':
+                        $icon = 'icon ion-android-bar';
+                        break;
+                    case 'sucos':
+                        $icon = 'icon ion-ios-pint';
+                        break;
+                    case 'energeticos':
+                        $icon = 'icon ion-ios-pint';
+                        break;
+                    case 'refrigerantes':
+                        $icon = 'icon ion-ios-pint';
+                        break;
+                    case 'vinhos':
+                        $icon = 'icon ion-wineglass';
+                        break;
+                    case 'lanches':
+                        $icon = 'icon ion-pizza';
+                        break;
+                    default:
+                        break;
+                }
+            else $icon = $item['icone'];
 
             return [
                 'id'   => $item['id'],

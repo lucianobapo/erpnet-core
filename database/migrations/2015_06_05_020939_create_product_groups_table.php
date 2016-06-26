@@ -23,6 +23,7 @@ class CreateProductGroupsTable extends BaseMigration {
             $table->string('mandante')->index();
 
             $table->string('grupo');
+            $table->string('icone')->nullable();
 		});
 	}
 

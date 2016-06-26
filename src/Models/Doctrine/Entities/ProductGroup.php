@@ -40,6 +40,11 @@ class ProductGroup extends EntityBase
     protected $grupo;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $icone;
+
+    /**
      * @ORM\OneToMany(targetEntity="ProductGroupSharedStat", mappedBy="productGroup")
      * @ORM\JoinColumn(name="id", referencedColumnName="product_group_id", nullable=false)
      */
@@ -124,6 +129,29 @@ class ProductGroup extends EntityBase
     public function getGrupo()
     {
         return $this->grupo;
+    }
+
+    /**
+     * Set the value of icone.
+     *
+     * @param string $icone
+     * @return \ErpNET\App\Models\Doctrine\Entities\ProductGroup
+     */
+    public function setIcone($icone)
+    {
+        $this->icone = $icone;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of icone.
+     *
+     * @return string
+     */
+    public function getIcone()
+    {
+        return $this->icone;
     }
 
     /**
