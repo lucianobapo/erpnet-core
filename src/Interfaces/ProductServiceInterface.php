@@ -11,5 +11,5 @@ interface ProductServiceInterface
     /**
      * @return string
      */
-    public function collectionProductsDelivery($categ = null);
+    public function collectionProductsDelivery($categ = null, $begin=null, $end=null);
 }

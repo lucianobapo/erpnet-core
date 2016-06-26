@@ -55,7 +55,7 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
 //        return new ArrayCollection($return);
     }
 
-    public function activatedProducts()
+    public function activatedProducts($begin=null, $end=null)
     {
         $qb = $this->_em->createQueryBuilder();
         $isEq = $qb->expr()->eq('st.status', '?1');
@@ -63,6 +63,9 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
             $isNull = $qb->expr()->isNull('p.deletedAt');
             $qb->where($isNull);
         }
+        if (!is_null($begin)) $qb->setFirstResult($begin);
+        if (!is_null($end)) $qb->setMaxResults($end);
+
         $qb
             ->select('p')
             ->from(Product::class, 'p')

@@ -22,10 +22,21 @@ class ProductServiceTest extends ServiceTestCase
     }
 
     public function testIfCollectionProductsDeliveryIsJson(){
-        $this->assertJson($this->service->collectionProductsDelivery());
+        $collectionProductsDelivery = $this->service->collectionProductsDelivery();
+        $this->assertJson($collectionProductsDelivery);;
+    }
+
+    public function testCollectionProductsDeliveryLimit(){
+        $start = 5;
+        $max = 10;
+        $collectionProductsDelivery = $this->service->collectionProductsDelivery(null,$start,$max);
+        $this->assertJson($collectionProductsDelivery);
+        $return = json_decode($collectionProductsDelivery);
+        $this->assertLessThanOrEqual($max,count($return->data));
     }
 
     public function testIfCollectionProductsDeliveryHaveRightFields(){
+//        $this->markTestSkipped();
         //Create Product
         $this->testClass = ProductRepositoryInterface::class;
         $recordProduct = $this->factoryTestClass();
@@ -55,6 +66,7 @@ class ProductServiceTest extends ServiceTestCase
     }
 
     public function testIfCollectionProductsDeliveryFilterCategory(){
+//        $this->markTestSkipped();
         //Create Product
         $this->testClass = ProductRepositoryInterface::class;
         $recordProduct = $this->factoryTestClass();
@@ -90,6 +102,7 @@ class ProductServiceTest extends ServiceTestCase
     /**
      * @param $recordProduct
      * @param array $grupo
+     * @return mixed
      */
     protected function criarGrupo(&$recordProduct, array $grupo=[])
     {

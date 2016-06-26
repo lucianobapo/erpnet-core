@@ -88,9 +88,9 @@ class ProductService implements ProductServiceInterface
     /**
      * @return string
      */
-    public function collectionProductsDelivery($categ = null)
+    public function collectionProductsDelivery($categ = null, $begin=null, $end=null)
     {
-        $activatedProducts = $this->productRepository->activatedProducts();
+        $activatedProducts = $this->productRepository->activatedProducts($begin, $end);
         $filtredActivatedProducts = [];
 
         foreach ($activatedProducts as $product) {

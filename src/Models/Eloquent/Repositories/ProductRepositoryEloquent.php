@@ -83,7 +83,7 @@ class ProductRepositoryEloquent extends AbstractRepository implements ProductRep
         $product->save();
     }
 
-    public function activatedProducts()
+    public function activatedProducts($begin=null, $end=null)
     {
         $queryResult = $this->model
             ->select('products.*')
@@ -92,6 +92,8 @@ class ProductRepositoryEloquent extends AbstractRepository implements ProductRep
             ->where('shared_stats.status', '=', 'ativado')
             ->where('valorUnitVenda', '>', 0)
             ->orderBy('products.nome');
+        if (!is_null($begin)) $queryResult->skip($begin);
+        if (!is_null($end)) $queryResult->take($end);
 
         $queryResult = $queryResult->get();
         return $queryResult;
