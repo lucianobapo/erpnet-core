@@ -44,7 +44,7 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 
     }
 
-    public function between($field, Carbon $start, Carbon $end){
+    public function between($field, Carbon $start, Carbon $end, $otherSelect=null){
         $formatedStart = $start->format('Y-m-d H:i:s');
         $formatedEnd = $end->format('Y-m-d H:i:s');
 
@@ -64,11 +64,26 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 //        $queryResult = $this->findBy([$field=>$start]);
 //        dd($queryResult);
 
+        $selects = ['table'];
+        if (!is_null($otherSelect)) {
+            if (is_array($otherSelect))
+                foreach ($otherSelect as $item)
+                    array_push($selects, $item);
+            else array_push($selects, $otherSelect);
+        }
+
         $qb
-            ->select('table','table.itemOrders')
-            ->from($this->getEntityName(), 'table')
-//            ->where($gt)
-//            ->where($isNull)
+            ->select($selects)
+            ->from($this->getEntityName(), 'table');
+
+        if (!is_null($otherSelect)) {
+            if (is_array($otherSelect))
+                foreach ($otherSelect as $item)
+                    $qb->leftJoin('table.'.$item, $item);
+            else $qb->leftJoin('table.'.$otherSelect, $otherSelect);
+        }
+
+        $qb
             ->where($between)
 
             ->setParameter(1, $formatedStart)

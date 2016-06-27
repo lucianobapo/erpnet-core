@@ -70,7 +70,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         return $this->model->withTrashed()->find($id)->restore();
     }
 
-    public function between($field, Carbon $start, Carbon $end){
+    public function between($field, Carbon $start, Carbon $end, $otherSelect=null){
 //        DB::enableQueryLog();
         $model = $this->model;
         $model = $model->whereBetween($field, array($start, $end));

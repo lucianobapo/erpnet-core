@@ -34,7 +34,7 @@ interface BaseRepositoryInterface
      * @param Carbon $end
      * @return array
      */
-    public function between($field, Carbon $start, Carbon $end);
+    public function between($field, Carbon $start, Carbon $end, $otherSelect=null);
 
     public function findOneOrFail($id);
 

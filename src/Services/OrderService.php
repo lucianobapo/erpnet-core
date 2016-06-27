@@ -259,7 +259,13 @@ class OrderService implements OrderServiceInterface
         $agora = Carbon::now();
 //        $agora = Carbon::now()->subWeek(2);
 //        $agora = Carbon::now()->subDay(20);
-        $ultimasOrdens = $this->orderRepository->between('posted_at', $ultimoFechamento, $agora);
+        $joins = [
+            'itemOrders',
+            'itemOrders',
+            'orderSharedStats',
+            'sharedOrderType',
+        ];
+        $ultimasOrdens = $this->orderRepository->between('posted_at', $ultimoFechamento, $agora, $joins);
 //        var_dump(count($ultimasOrdens));
         $arrayOrderSummary = $this->itemStockOfOrders($ultimasOrdens);
 //        var_dump(count($arrayOrderSummary));
