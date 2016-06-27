@@ -73,7 +73,10 @@ abstract class AbstractRepository implements BaseRepositoryInterface
     public function between($field, Carbon $start, Carbon $end, $otherSelect=null){
 //        DB::enableQueryLog();
         $model = $this->model;
-        $model = $model->whereBetween($field, array($start, $end));
+        if (!is_null($otherSelect)) {
+            $this->model->with($otherSelect);
+        }
+        $this->model->whereBetween($field, array($start, $end));
         $return = $model->get();
 //        var_dump(DB::getQueryLog()[0]['bindings']);
         if (count($return)==0){

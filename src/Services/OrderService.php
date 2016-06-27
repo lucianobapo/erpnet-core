@@ -261,7 +261,6 @@ class OrderService implements OrderServiceInterface
 //        $agora = Carbon::now()->subDay(20);
         $joins = [
             'itemOrders',
-            'itemOrders',
             'orderSharedStats',
             'sharedOrderType',
         ];
