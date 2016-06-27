@@ -55,7 +55,7 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
 //        return new ArrayCollection($return);
     }
 
-    public function activatedProducts($begin=null, $end=null)
+    public function activatedProducts($begin=null, $end=null, $idCategory=null)
     {
         $qb = $this->_em->createQueryBuilder();
         $isEq = $qb->expr()->eq('st.status', '?1');
@@ -71,10 +71,18 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
             ->from(Product::class, 'p')
             ->join('p.productSharedStats', 'pst', 'WITH', 'p.id = pst.product_id')
             ->join('pst.sharedStat', 'st', 'WITH', 'pst.shared_stat_id = st.id')
-            ->where($isEq)
+            ->where($isEq);
+        if (!is_null($idCategory)){
+            $isEq2 = $qb->expr()->eq('ppg.product_group_id', '?2');
+            $qb
+                ->join('p.productProductGroups', 'ppg', 'WITH', 'p.id = ppg.product_id')
+                ->andWhere($isEq2)
+                ->setParameter(2, $idCategory)
+            ;
+        }
+        $qb
             ->andWhere('p.valorUnitVenda>0')
             ->setParameter(1, 'ativado')
-
             ->orderBy('p.nome', 'ASC')
         ;
         $query = $qb->getQuery();
