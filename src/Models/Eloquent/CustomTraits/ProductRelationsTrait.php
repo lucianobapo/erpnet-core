@@ -37,6 +37,9 @@ trait ProductRelationsTrait
     public function groups() {
         return $this->belongsToMany(ProductGroup::class)->withTimestamps();
     }
+    public function productProductGroups() {
+        return $this->groups();
+    }
 
     /**
      * Get the groups associated with the given product.

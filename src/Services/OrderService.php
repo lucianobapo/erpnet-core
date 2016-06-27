@@ -263,7 +263,7 @@ class OrderService implements OrderServiceInterface
             'itemOrders',
             'itemOrders.product',
             'orderSharedStats',
-            'orderSharedStats.sharedStat',
+//            'orderSharedStats.sharedStat',
             'sharedOrderType',
         ];
         $ultimasOrdens = $this->orderRepository->between('posted_at', $ultimoFechamento, $agora, $joins);

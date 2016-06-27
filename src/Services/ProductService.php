@@ -96,12 +96,11 @@ class ProductService implements ProductServiceInterface
         foreach ($activatedProducts as $product) {
             $isDelivery = false;
             $isCategory = false;
-            $productProductGroups = $this->productProductGroupRepository->findBy(['product_id'=>$product->id]);
-            foreach ($productProductGroups as $productProductGroup) {
-                if ($productProductGroup->productGroup->grupo=="Delivery")
-                    $isDelivery = true;
-                if (!is_null($categ) && ((int)$categ)>0 && $productProductGroup->productGroup->id==$categ)
-                    $isCategory = true;
+            foreach ($product->productProductGroups as $productProductGroup) {
+                if (is_null($productProductGroup->productGroup)) $productGroup = $productProductGroup;
+                else $productGroup = $productProductGroup->productGroup;
+                if ($productGroup->grupo=="Delivery") $isDelivery = true;
+                if (!is_null($categ) && ((int)$categ)>0 && $productGroup->id==$categ) $isCategory = true;
             }
             if (!is_null($categ) && ((int)$categ)>0){
                 if ($isDelivery && $isCategory)
