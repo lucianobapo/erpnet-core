@@ -72,7 +72,7 @@ class ProductRepositoryDoctrine extends BaseEntityRepository implements ProductR
             ->join('p.productSharedStats', 'pst', 'WITH', 'p.id = pst.product_id')
             ->join('pst.sharedStat', 'st', 'WITH', 'pst.shared_stat_id = st.id')
             ->where($isEq);
-        if (!is_null($idCategory)){
+        if (!is_null($idCategory) && ((int)$idCategory)>0){
             $isEq2 = $qb->expr()->eq('ppg.product_group_id', '?2');
             $qb
                 ->join('p.productProductGroups', 'ppg', 'WITH', 'p.id = ppg.product_id')
