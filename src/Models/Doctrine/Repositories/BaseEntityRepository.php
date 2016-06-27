@@ -45,6 +45,14 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
     }
 
     public function between($field, Carbon $start, Carbon $end, $otherSelect=null){
+        function toAlias($str){
+            return str_replace('.','',$str);
+        }
+        function toField($str){
+            if (strpos($str,'.')===false) return 'table.'.$str;
+            else return $str;
+        }
+
         $formatedStart = $start->format('Y-m-d H:i:s');
         $formatedEnd = $end->format('Y-m-d H:i:s');
 
@@ -68,8 +76,9 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
         if (!is_null($otherSelect)) {
             if (is_array($otherSelect))
                 foreach ($otherSelect as $item)
-                    array_push($selects, $item);
-            else array_push($selects, $otherSelect);
+                    array_push($selects, toAlias($item));
+            else
+                array_push($selects, toAlias($otherSelect));
         }
 
         $qb
@@ -79,13 +88,13 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
         if (!is_null($otherSelect)) {
             if (is_array($otherSelect))
                 foreach ($otherSelect as $item)
-                    $qb->leftJoin('table.'.$item, $item);
-            else $qb->leftJoin('table.'.$otherSelect, $otherSelect);
+                    $qb->leftJoin(toField($item), toAlias($item));
+            else
+                $qb->leftJoin(toField($otherSelect), toAlias($otherSelect));
         }
 
         $qb
             ->where($between)
-
             ->setParameter(1, $formatedStart)
             ->setParameter(2, $formatedEnd)
 //            ->orderBy('p.nome', 'ASC')
