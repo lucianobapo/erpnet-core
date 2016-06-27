@@ -65,7 +65,7 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
 //        dd($queryResult);
 
         $qb
-            ->select('table')
+            ->select('table','table.itemOrders')
             ->from($this->getEntityName(), 'table')
 //            ->where($gt)
 //            ->where($isNull)
