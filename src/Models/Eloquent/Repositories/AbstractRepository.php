@@ -74,9 +74,9 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 //        DB::enableQueryLog();
         $model = $this->model;
         if (!is_null($otherSelect)) {
-            $this->model->with($otherSelect);
+            $model = $model->with($otherSelect);
         }
-        $this->model->whereBetween($field, array($start, $end));
+        $model = $model->whereBetween($field, array($start, $end));
         $return = $model->get();
 //        var_dump(DB::getQueryLog()[0]['bindings']);
         if (count($return)==0){
