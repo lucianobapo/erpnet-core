@@ -91,7 +91,7 @@ class ProductService implements ProductServiceInterface
     public function collectionProductsDelivery($categ = null, $begin=null, $end=null)
     {
         $activatedProducts = $this->productRepository->activatedProducts($begin, $end, $categ);
-        $totalProducts = count($activatedProducts);
+        $totalProducts = count($this->productRepository->activatedProducts(null, null, $categ));
         $filtredActivatedProducts = [];
 
         foreach ($activatedProducts as $product) {
