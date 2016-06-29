@@ -111,6 +111,7 @@ class ProductService implements ProductServiceInterface
         }
 
         $fractal = new Manager();
+
         $resource = new Collection($filtredActivatedProducts, function($item) use ($totalProducts) {
             if (isset($this->orderService->itemStock[$item->id]))
                 $stock = $this->orderService->itemStock[$item->id];
