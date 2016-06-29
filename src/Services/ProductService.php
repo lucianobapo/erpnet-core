@@ -91,6 +91,7 @@ class ProductService implements ProductServiceInterface
     public function collectionProductsDelivery($categ = null, $begin=null, $end=null)
     {
         $activatedProducts = $this->productRepository->activatedProducts($begin, $end, $categ);
+        $totalProducts = count($activatedProducts);
         $filtredActivatedProducts = [];
 
         foreach ($activatedProducts as $product) {
@@ -110,7 +111,7 @@ class ProductService implements ProductServiceInterface
         }
 
         $fractal = new Manager();
-        $resource = new Collection($filtredActivatedProducts, function($item) {
+        $resource = new Collection($filtredActivatedProducts, function($item) use ($totalProducts) {
             if (isset($this->orderService->itemStock[$item->id]))
                 $stock = $this->orderService->itemStock[$item->id];
             else
@@ -123,6 +124,7 @@ class ProductService implements ProductServiceInterface
                 'imagem'   => $item->imagem,
                 'max' => $stock>=0?$stock:0,
                 'valor'   => $valor,
+                'totalProducts'   => $totalProducts,
             ];
         });
         return $fractal->createData($resource)->toJson();
