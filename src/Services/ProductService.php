@@ -91,24 +91,9 @@ class ProductService implements ProductServiceInterface
     public function collectionProductsDelivery($categ = null, $begin=null, $end=null)
     {
         $activatedProducts = $this->productRepository->activatedProducts($begin, $end, $categ);
-        $totalProducts = count($this->productRepository->activatedProducts(null, null, $categ));
-        $filtredActivatedProducts = [];
+        $totalProducts = count($this->filterProducts($categ, $this->productRepository->activatedProducts(null, null, $categ)));
 
-        foreach ($activatedProducts as $product) {
-            $isDelivery = false;
-            $isCategory = false;
-            foreach ($product->productProductGroups as $productProductGroup) {
-                if (is_null($productProductGroup->productGroup)) $productGroup = $productProductGroup;
-                else $productGroup = $productProductGroup->productGroup;
-                if ($productGroup->grupo=="Delivery") $isDelivery = true;
-                if (!is_null($categ) && ((int)$categ)>0 && $productGroup->id==$categ) $isCategory = true;
-            }
-            if (!is_null($categ) && ((int)$categ)>0){
-                if ($isDelivery && $isCategory)
-                    $filtredActivatedProducts[] = $product;
-            }elseif ($isDelivery)
-                $filtredActivatedProducts[] = $product;
-        }
+        $filtredActivatedProducts = $this->filterProducts($categ, $activatedProducts);
 
         $fractal = new Manager();
 
@@ -129,5 +114,32 @@ class ProductService implements ProductServiceInterface
             ];
         });
         return $fractal->createData($resource)->toJson();
+    }
+
+    /**
+     * @param $categ
+     * @param $activatedProducts
+     * @return array
+     */
+    protected function filterProducts($categ, $activatedProducts)
+    {
+        $filtredActivatedProducts = [];
+
+        foreach ($activatedProducts as $product) {
+            $isDelivery = false;
+            $isCategory = false;
+            foreach ($product->productProductGroups as $productProductGroup) {
+                if (is_null($productProductGroup->productGroup)) $productGroup = $productProductGroup;
+                else $productGroup = $productProductGroup->productGroup;
+                if ($productGroup->grupo == "Delivery") $isDelivery = true;
+                if (!is_null($categ) && ((int)$categ) > 0 && $productGroup->id == $categ) $isCategory = true;
+            }
+            if (!is_null($categ) && ((int)$categ) > 0) {
+                if ($isDelivery && $isCategory)
+                    $filtredActivatedProducts[] = $product;
+            } elseif ($isDelivery)
+                $filtredActivatedProducts[] = $product;
+        }
+        return $filtredActivatedProducts;
     }
 }
