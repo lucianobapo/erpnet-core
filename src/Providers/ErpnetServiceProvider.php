@@ -21,11 +21,11 @@ class ErpnetServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        if (!$this->app->routesAreCached()) {
-            require __DIR__ . "/../Http/Routes.php";
-        }
+//        if (!$this->app->routesAreCached()) {
+//            require __DIR__ . "/../Http/Routes.php";
+//        }
 
-        $this->loadViewsFrom( __DIR__."/../../resources/views", "erpnet");
+//        $this->loadViewsFrom( __DIR__."/../../resources/views", "erpnet");
 
         $this->publishes([
             __DIR__."/../../database/migrations" => database_path("migrations")
