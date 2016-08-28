@@ -24,7 +24,9 @@
 |
 */
 Route::group(['middleware' => ['web']], function () {
-    Route::get('/', function () {
-        return ('welcome');
-    });
+//    Route::get('/', function () {
+//        return ('welcome');
+//    });
+
+
 });
