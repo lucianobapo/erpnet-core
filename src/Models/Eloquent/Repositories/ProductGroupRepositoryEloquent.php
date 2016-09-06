@@ -85,7 +85,7 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
             else $icon = $item['icone'];
 
             return [
-                'id'   => $item['id'],
+                'id'   => $item['product_group_id'],
                 'icon'   => $icon,
                 'nome'   => $nome
             ];

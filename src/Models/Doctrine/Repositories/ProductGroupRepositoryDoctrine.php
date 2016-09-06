@@ -111,7 +111,7 @@ class ProductGroupRepositoryDoctrine extends BaseEntityRepository implements Pro
             else $icon = $item['icone'];
 
             return [
-                'id'   => $item['id'],
+                'id'   => $item['product_group_id'],
                 'icon'   => $icon,
                 'nome'   => $nome
             ];
