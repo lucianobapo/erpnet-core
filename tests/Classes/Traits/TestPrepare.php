@@ -55,8 +55,8 @@ trait TestPrepare
     }
 
     public function loadCustomConfig(){
-        config(['erpnet.orm'=> 'doctrine']);
-//        config(['erpnet.orm'=> 'eloquent']);
+//        config(['erpnet.orm'=> 'doctrine']);
+        config(['erpnet.orm'=> 'eloquent']);
 
         config(['doctrine.managers.default.connection'=> 'sqlite']);
         config(['database.default'=> 'sqlite']);

@@ -34,7 +34,7 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
 
     public function collectionCategorias(){
         $queryResult = $this->model
-            ->where('grupo', 'LIKE', 'Categoria:%')
+            ->where('grupo', 'LIKE', '%Categoria:%')
             ->orderBy('grupo')
             ->get()
             ->toArray();
@@ -42,7 +42,7 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
         $fractal = new Manager();
         $resource = new Collection($queryResult, function(array $item) {
             $icon = '';
-            $nome = substr($item['grupo'], 11);
+            $nome = substr($item['grupo'], 11+strpos($item['grupo'],'Categoria:'));
 
             if (is_null($item['icone']))
                 switch (str_slug($nome)){
