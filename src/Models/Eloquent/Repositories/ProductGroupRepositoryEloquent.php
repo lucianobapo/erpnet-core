@@ -34,6 +34,9 @@ class ProductGroupRepositoryEloquent extends AbstractRepository implements Produ
 
     public function collectionCategorias(){
         $queryResult = $this->model
+            ->join('product_group_shared_stat', 'product_groups.id', '=', 'product_group_shared_stat.product_group_id')
+            ->join('shared_stats', 'product_group_shared_stat.shared_stat_id', '=', 'shared_stats.id')
+            ->where('shared_stats.status', '=', 'ativado')
             ->where('grupo', 'LIKE', '%Categoria:%')
             ->orderBy('grupo')
             ->get()

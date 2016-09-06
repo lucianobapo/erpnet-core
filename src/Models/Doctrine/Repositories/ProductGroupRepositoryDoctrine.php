@@ -63,7 +63,7 @@ class ProductGroupRepositoryDoctrine extends BaseEntityRepository implements Pro
             ->andWhere($isLike)
             ->orderBy('p.grupo', 'ASC')
             ->setParameter(1, 'ativado')
-            ->setParameter(2, 'Categoria:%')
+            ->setParameter(2, '%Categoria:%')
         ;
         $query = $qb->getQuery();
         $queryResult = $query->getArrayResult();
@@ -71,7 +71,7 @@ class ProductGroupRepositoryDoctrine extends BaseEntityRepository implements Pro
         $fractal = new Manager();
         $resource = new Collection($queryResult, function(array $item) {
             $icon = '';
-            $nome = substr($item['grupo'], 11);
+            $nome = substr($item['grupo'], 11+strpos($item['grupo'],'Categoria:'));
 
             if (is_null($item['icone']))
                 switch (str_slug($nome)){
