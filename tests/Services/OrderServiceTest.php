@@ -15,6 +15,68 @@ class OrderServiceTest extends ServiceTestCase
 //    protected $testClass = OrderServiceInterface::class;
 
     protected $mock = array (
+        'mandante' => 'ilhanet',
+        'pagamento' => 'vistad',
+        'address_id' => '14',
+        'emailChanged' => 'false',
+        'cep' => '',
+        'origem' => 'site',
+        'showNameInput' => 'false',
+        'showDateInput' => 'false',
+        'showEmailInput' => 'false',
+        'showTelefoneInput' => 'true',
+        'showWhatsappInput' => 'true',
+        'user_provider_id' => '715754005209871',
+        'name' => 'Luciano Porto',
+        'picture' => 'https://graph.facebook.com/715754005209871/picture?type=small',
+        'userEmail' => 'luciano.bapo@gmail.com',
+        'user_id' => '8',
+        'partner_id' => '12',
+        'showAddressList' => 'true',
+        'observacao' => 'teste2',
+        'itens' =>
+            array (
+                0 =>
+                    array (
+                        'id' => '140',
+                        'nome' => 'Água Com Gás Schin 500ml',
+                        'quantidade' => '1',
+                        'valor' => '4',
+                        '$$hashKey' => 'object:809',
+                    ),
+            ),
+    );
+
+    protected $mock3 = array (
+        'mandante' => 'ilhanet',
+        'pagamento' => 'vistad',
+        'address_id' => '13',
+        'emailChanged' => 'false',
+        'cep' => '',
+        'origem' => 'site',
+        'showNameInput' => 'false',
+        'showDateInput' => 'false',
+        'showEmailInput' => 'false',
+        'showTelefoneInput' => 'true',
+        'showWhatsappInput' => 'false',
+        'user_id' => '8',
+        'partner_id' => '12',
+        'showAddressList' => 'true',
+        'observacao' => 'teste',
+        'itens' =>
+            array (
+                0 =>
+                    array (
+                        'id' => '52',
+                        'nome' => 'Água S/Gás 510ml',
+                        'quantidade' => '1',
+                        'valor' => '3',
+                        '$$hashKey' => 'object:757',
+                    ),
+            ),
+    );
+
+    protected $mock2 = array (
         'pagamento' => 'debito',
         'address_id' => 'false',
         'emailChanged' => 'false',
@@ -166,9 +228,9 @@ class OrderServiceTest extends ServiceTestCase
 
             $repoOrder = $this->app->make(OrderRepositoryInterface::class);
             $recordOrder = $repoOrder->find($orderObj->id);
-            $this->assertEquals($recordOrder->partner->nome, $this->mock['nome']);
+            $this->assertEquals($recordOrder->partner->nome, $this->mock['name']);
             $this->assertEquals($recordOrder->address->cep, $this->mock['cep']);
-            $this->assertEquals($recordOrder->address->partner->nome, $this->mock['nome']);
+            $this->assertEquals($recordOrder->address->partner->nome, $this->mock['name']);
 
             $this->assertEquals($recordOrder->sharedOrderPayment->pagamento, $this->mock['pagamento']);
             $this->assertEquals($recordOrder->sharedOrderType->tipo, 'ordemVenda');
@@ -181,7 +243,7 @@ class OrderServiceTest extends ServiceTestCase
                     'contact_data'=>$this->mock['email']
                 ]);
                 $this->assertNotNull($recordContact);
-                $this->assertEquals($recordContact->partner->nome, $this->mock['nome']);
+                $this->assertEquals($recordContact->partner->nome, $this->mock['name']);
             }
 
             // Assertions for telefone
@@ -192,7 +254,7 @@ class OrderServiceTest extends ServiceTestCase
                     'contact_data'=>$this->mock['telefone']
                 ]);
                 $this->assertNotNull($recordContact);
-                $this->assertEquals($recordContact->partner->nome, $this->mock['nome']);
+                $this->assertEquals($recordContact->partner->nome, $this->mock['name']);
             }
 
             // Assertions for whatsapp
@@ -203,7 +265,7 @@ class OrderServiceTest extends ServiceTestCase
                     'contact_data'=>$this->mock['whatsapp']
                 ]);
                 $this->assertNotNull($recordContact);
-                $this->assertEquals($recordContact->partner->nome, $this->mock['nome']);
+                $this->assertEquals($recordContact->partner->nome, $this->mock['name']);
             }
 
             // Assertions for Status
