@@ -143,6 +143,8 @@ class OrderService implements OrderServiceInterface
             }
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
 
+            $this->partnerRepository->addPartnerToStat($partnerRecord, $sharedStatRecord);
+
 
             $userRecord = null;
             // Encontra usuário já criado

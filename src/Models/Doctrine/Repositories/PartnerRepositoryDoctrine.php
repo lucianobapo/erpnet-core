@@ -60,4 +60,17 @@ class PartnerRepositoryDoctrine extends BaseEntityRepository implements PartnerR
         $this->_em->persist($partner);
         $this->_em->flush();
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $sharedStat
+     */
+    public function addPartnerToStat($partner, $sharedStat)
+    {
+        $ownerEntity = $this->resolveEntityManyToMany($sharedStat, 'partnerSharedStats');
+        $ownerEntity->setSharedStat($sharedStat);
+        $ownerEntity->setPartner($partner);
+        $this->_em->persist($ownerEntity);
+        $this->_em->flush();
+    }
 }

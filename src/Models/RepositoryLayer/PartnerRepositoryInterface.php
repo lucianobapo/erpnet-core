@@ -25,4 +25,10 @@ interface PartnerRepositoryInterface extends BaseRepositoryInterface
      * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
      */
     public function addUserToPartner($user, $partner);
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $sharedStat
+     */
+    public function addPartnerToStat($partner, $sharedStat);
 }
