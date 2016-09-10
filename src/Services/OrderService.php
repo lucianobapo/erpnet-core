@@ -15,6 +15,7 @@ use ErpNET\App\Models\Doctrine\Entities\EntityBase;
 use ErpNET\App\Models\RepositoryLayer\ItemOrderRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\OrderSharedStatRepositoryInterface;
+use ErpNET\App\Models\RepositoryLayer\PartnerGroupRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\PartnerRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\AddressRepositoryInterface;
 use ErpNET\App\Models\RepositoryLayer\ContactRepositoryInterface;
@@ -32,6 +33,7 @@ class OrderService implements OrderServiceInterface
     protected $summaryService;
     protected $userRepository;
     protected $partnerRepository;
+    protected $partnerGroupRepository;
     protected $productRepository;
     protected $orderRepository;
     protected $itemOrderRepository;
@@ -49,6 +51,7 @@ class OrderService implements OrderServiceInterface
         SummaryServiceInterface $summaryService,
         UserRepositoryInterface $userRepository,
         PartnerRepositoryInterface $partnerRepository,
+        PartnerGroupRepositoryInterface $partnerGroupRepository,
         ProductRepositoryInterface $productRepository,
         OrderRepositoryInterface $orderRepository,
         ItemOrderRepositoryInterface $itemOrderRepository,
@@ -66,6 +69,7 @@ class OrderService implements OrderServiceInterface
         $this->summaryService = $summaryService;
         $this->userRepository = $userRepository;
         $this->partnerRepository = $partnerRepository;
+        $this->partnerGroupRepository = $partnerGroupRepository;
         $this->productRepository = $productRepository;
         $this->orderRepository = $orderRepository;
         $this->itemOrderRepository = $itemOrderRepository;
@@ -130,8 +134,12 @@ class OrderService implements OrderServiceInterface
             if (is_null($partnerRecord)){
                 $fields = [
                     'mandante' => $objectData->mandante,
-                    'nome' => $objectData->nome,
+//                    'nome' => $objectData->nome,
                 ];
+
+                if (property_exists($objectData, 'nome')) $fields['nome'] = $objectData->nome;
+                if (property_exists($objectData, 'name')) $fields['nome'] = $objectData->name;
+
                 if (property_exists($objectData, 'data_nascimento')){
                     if (is_string($objectData->data_nascimento))
                         $fields['data_nascimento'] = Carbon::createFromFormat('d/m/Y',$objectData->data_nascimento);
@@ -144,6 +152,10 @@ class OrderService implements OrderServiceInterface
             $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
 
             $this->partnerRepository->addPartnerToStat($partnerRecord, $sharedStatRecord);
+
+//            $partnerGroupRecord = $this->partnerGroupRepository->firstOrCreate([
+//                'grupo' => 'Cliente',
+//            ]);
 
 
             $userRecord = null;
@@ -197,13 +209,19 @@ class OrderService implements OrderServiceInterface
             if (property_exists($objectData, 'address_id')){
                 $addressRecord = $this->addressRepository->find($objectData->address_id);
                 if (is_null($addressRecord)){
-                    $addressRecord = $this->addressRepository->create([
+                    $data1 = [
                         'mandante' => $objectData->mandante,
                         'cep' => $objectData->cep,
-                        'logradouro' => $objectData->endereco,
-                        'bairro' => $objectData->bairro,
-                        'numero' => $objectData->numero,
-                    ]);
+//                        'logradouro' => $objectData->endereco,
+//                        'bairro' => $objectData->bairro,
+//                        'numero' => $objectData->numero,
+                    ];
+                    if (property_exists($objectData, 'endereco'))
+                        $fields['logradouro'] = $objectData->endereco;
+//                    else throw new \Exception('Error address is blank');
+                    if (property_exists($objectData, 'bairro')) $fields['bairro'] = $objectData->bairro;
+                    if (property_exists($objectData, 'numero')) $fields['numero'] = $objectData->numero;
+                    $addressRecord = $this->addressRepository->create($data1);
                 }
                 if (is_null($addressRecord)) throw new \Exception('Error with address_id: '.$objectData->address_id);
             }
@@ -229,7 +247,7 @@ class OrderService implements OrderServiceInterface
 
                 $this->orderRepository->addOrderToItem($orderRecord, $itemOrderRecord);
             }
-
+//
             $addedOrder = $this->orderRepository->find($orderRecord->id);
             $return = json_encode([
                 'error' => false,

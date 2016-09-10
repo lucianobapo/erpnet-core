@@ -11,41 +11,26 @@ namespace ErpNET\App\Models\Doctrine\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use ErpNET\App\Models\Doctrine\CustomTraits\MandanteTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ErpNET\App\Models\Doctrine\Entities\PartnerGroup
  *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="PartnerGroupRepository")
  * @ORM\Table(name="partner_groups", indexes={@ORM\Index(name="partner_groups_mandante_index", columns={"mandante"})})
  */
-class PartnerGroup
+class PartnerGroup extends EntityBase
 {
+    use MandanteTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated_at;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $deleted_at;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    protected $mandante;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -84,98 +69,6 @@ class PartnerGroup
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of created_at.
-     *
-     * @param \DateTime $created_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\PartnerGroup
-     */
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of created_at.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set the value of updated_at.
-     *
-     * @param \DateTime $updated_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\PartnerGroup
-     */
-    public function setUpdatedAt($updated_at)
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of updated_at.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
-    /**
-     * Set the value of deleted_at.
-     *
-     * @param \DateTime $deleted_at
-     * @return \ErpNET\App\Models\Doctrine\Entities\PartnerGroup
-     */
-    public function setDeletedAt($deleted_at)
-    {
-        $this->deleted_at = $deleted_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of deleted_at.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deleted_at;
-    }
-
-    /**
-     * Set the value of mandante.
-     *
-     * @param string $mandante
-     * @return \ErpNET\App\Models\Doctrine\Entities\PartnerGroup
-     */
-    public function setMandante($mandante)
-    {
-        $this->mandante = $mandante;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of mandante.
-     *
-     * @return string
-     */
-    public function getMandante()
-    {
-        return $this->mandante;
     }
 
     /**

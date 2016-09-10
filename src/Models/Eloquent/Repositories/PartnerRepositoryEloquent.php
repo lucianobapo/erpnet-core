@@ -37,4 +37,15 @@ class PartnerRepositoryEloquent extends AbstractRepository implements PartnerRep
         $partner->user()->associate($user);
         $partner->save();
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\SharedStat | \ErpNET\App\Models\Doctrine\Entities\SharedStat $sharedStat
+     */
+    public function addPartnerToStat($partner, $sharedStat)
+    {
+        $this->model
+            ->status()
+            ->attach($sharedStat->id, ['partner_id'=>$partner->id]);
+    }
 }

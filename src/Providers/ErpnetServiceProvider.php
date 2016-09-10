@@ -140,6 +140,15 @@ class ErpnetServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \ErpNET\App\Models\RepositoryLayer\PartnerGroupRepositoryInterface::class,
+
+            check_orm(\ErpNET\App\Models\Eloquent\Repositories\PartnerGroupRepositoryEloquent::class,[
+                'repository' => \ErpNET\App\Models\Doctrine\Repositories\PartnerGroupRepositoryDoctrine::class,
+                'entity' => \ErpNET\App\Models\Doctrine\Entities\PartnerGroup::class
+            ])
+        );
+
+        $this->app->bind(
             \ErpNET\App\Models\RepositoryLayer\OrderRepositoryInterface::class,
             check_orm(\ErpNET\App\Models\Eloquent\Repositories\OrderRepositoryEloquent::class,[
                 'repository' => \ErpNET\App\Models\Doctrine\Repositories\OrderRepositoryDoctrine::class,

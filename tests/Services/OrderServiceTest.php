@@ -38,7 +38,7 @@ class OrderServiceTest extends ServiceTestCase
             array (
                 0 =>
                     array (
-                        'id' => '140',
+                        'id' => '1',
                         'nome' => 'Água Com Gás Schin 500ml',
                         'quantidade' => '1',
                         'valor' => '4',
@@ -228,6 +228,8 @@ class OrderServiceTest extends ServiceTestCase
 
             $repoOrder = $this->app->make(OrderRepositoryInterface::class);
             $recordOrder = $repoOrder->find($orderObj->id);
+
+//            $this->assertObjectHasAttribute('partner', $recordOrder);
             $this->assertEquals($recordOrder->partner->nome, $this->mock['name']);
             $this->assertEquals($recordOrder->address->cep, $this->mock['cep']);
             $this->assertEquals($recordOrder->address->partner->nome, $this->mock['name']);
