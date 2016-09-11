@@ -4,6 +4,7 @@ namespace ErpNET\App\Models\Eloquent\CustomTraits;
 
 use ErpNET\App\Models\Eloquent\Contact;
 use ErpNET\App\Models\Eloquent\Order;
+use ErpNET\App\Models\Eloquent\SharedStat;
 use ErpNET\App\Models\Eloquent\User;
 
 trait PartnerRelationsTrait
@@ -40,7 +41,7 @@ trait PartnerRelationsTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function status() {
-//        return $this->belongsToMany(ErpNET\App\Models\SharedStat::class)->withTimestamps();
+        return $this->belongsToMany(SharedStat::class)->withTimestamps();
     }
 
     /**

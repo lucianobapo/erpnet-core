@@ -15,34 +15,36 @@ class OrderServiceTest extends ServiceTestCase
 //    protected $testClass = OrderServiceInterface::class;
 
     protected $mock = array (
-        'mandante' => 'ilhanet',
-        'pagamento' => 'vistad',
-        'address_id' => '14',
-        'emailChanged' => 'false',
-        'cep' => '',
-        'origem' => 'site',
-        'showNameInput' => 'false',
-        'showDateInput' => 'false',
-        'showEmailInput' => 'false',
-        'showTelefoneInput' => 'true',
-        'showWhatsappInput' => 'true',
-        'user_provider_id' => '715754005209871',
-        'name' => 'Luciano Porto',
-        'picture' => 'https://graph.facebook.com/715754005209871/picture?type=small',
-        'userEmail' => 'luciano.bapo@gmail.com',
-        'user_id' => '8',
-        'partner_id' => '12',
-        'showAddressList' => 'true',
-        'observacao' => 'teste2',
-        'itens' =>
+        "mandante"=>"ilhanet",
+        "pagamento"=>"vistad",
+        "matches"=>[],
+        "addresses"=>[],
+        "address_id"=>false,
+        "emailChanged"=>false,
+        "cep"=>"28893280",
+        "origem"=>"site",
+        "showNameInput"=>true,
+        "showDateInput"=>true,
+        "showEmailInput"=>true,
+        "showTelefoneInput"=>true,
+        "showWhatsappInput"=>true,
+        "nome"=>"teste",
+        "telefone"=>"22999964314",
+        "whatsapp"=>"22999964314",
+        "endereco"=>"Avenida Brasil",
+        "bairro"=>"Extensão do Bosque",
+        "numero"=>"123",
+        "observacao"=>"teste",
+        "data_nascimento"=>null,
+        "itens"=>
             array (
                 0 =>
                     array (
                         'id' => '1',
-                        'nome' => 'Água Com Gás Schin 500ml',
+                        'nome' => 'Água S/Gás 510ml',
                         'quantidade' => '1',
-                        'valor' => '4',
-                        '$$hashKey' => 'object:809',
+                        'valor' => '3',
+                        '$$hashKey' => 'object:585',
                     ),
             ),
     );
@@ -230,9 +232,9 @@ class OrderServiceTest extends ServiceTestCase
             $recordOrder = $repoOrder->find($orderObj->id);
 
 //            $this->assertObjectHasAttribute('partner', $recordOrder);
-            $this->assertEquals($recordOrder->partner->nome, $this->mock['name']);
+            $this->assertEquals($recordOrder->partner->nome, $this->mock['nome']);
             $this->assertEquals($recordOrder->address->cep, $this->mock['cep']);
-            $this->assertEquals($recordOrder->address->partner->nome, $this->mock['name']);
+            $this->assertEquals($recordOrder->address->partner->nome, $this->mock['nome']);
 
             $this->assertEquals($recordOrder->sharedOrderPayment->pagamento, $this->mock['pagamento']);
             $this->assertEquals($recordOrder->sharedOrderType->tipo, 'ordemVenda');
@@ -256,7 +258,7 @@ class OrderServiceTest extends ServiceTestCase
                     'contact_data'=>$this->mock['telefone']
                 ]);
                 $this->assertNotNull($recordContact);
-                $this->assertEquals($recordContact->partner->nome, $this->mock['name']);
+                $this->assertEquals($recordContact->partner->nome, $this->mock['nome']);
             }
 
             // Assertions for whatsapp
@@ -267,7 +269,7 @@ class OrderServiceTest extends ServiceTestCase
                     'contact_data'=>$this->mock['whatsapp']
                 ]);
                 $this->assertNotNull($recordContact);
-                $this->assertEquals($recordContact->partner->nome, $this->mock['name']);
+                $this->assertEquals($recordContact->partner->nome, $this->mock['nome']);
             }
 
             // Assertions for Status
