@@ -48,4 +48,15 @@ class PartnerRepositoryEloquent extends AbstractRepository implements PartnerRep
             ->status()
             ->attach($sharedStat->id, ['partner_id'=>$partner->id]);
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\PartnerGroup | \ErpNET\App\Models\Doctrine\Entities\PartnerGroup $partnerGroup
+     */
+    public function addPartnerToGroup($partner, $partnerGroup)
+    {
+        $this->model
+            ->groups()
+            ->attach($partnerGroup->id, ['partner_id'=>$partner->id]);
+    }
 }

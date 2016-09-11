@@ -274,11 +274,13 @@ class OrderService implements OrderServiceInterface
 
         $this->partnerRepository->addPartnerToStat($partnerRecord, $sharedStatRecord);
 
-        return $partnerRecord;
+        $partnerGroupRecord = $this->partnerGroupRepository->firstOrCreate([
+            'grupo' => 'Cliente',
+        ]);
 
-//            $partnerGroupRecord = $this->partnerGroupRepository->firstOrCreate([
-//                'grupo' => 'Cliente',
-//            ]);
+        $this->partnerRepository->addPartnerToGroup($partnerRecord, $partnerGroupRecord);
+
+        return $partnerRecord;
     }
 
     /**

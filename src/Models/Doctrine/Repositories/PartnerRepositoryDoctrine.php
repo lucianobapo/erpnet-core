@@ -73,4 +73,17 @@ class PartnerRepositoryDoctrine extends BaseEntityRepository implements PartnerR
         $this->_em->persist($ownerEntity);
         $this->_em->flush();
     }
+
+    /**
+     * @param \ErpNET\App\Models\Eloquent\Partner | \ErpNET\App\Models\Doctrine\Entities\Partner $partner
+     * @param \ErpNET\App\Models\Eloquent\PartnerGroup | \ErpNET\App\Models\Doctrine\Entities\PartnerGroup $partnerGroup
+     */
+    public function addPartnerToGroup($partner, $partnerGroup)
+    {
+        $ownerEntity = $this->resolveEntityManyToMany($partnerGroup, 'partnerPartnerGroups');
+        $ownerEntity->setPartnerGroup($partnerGroup);
+        $ownerEntity->setPartner($partner);
+        $this->_em->persist($ownerEntity);
+        $this->_em->flush();
+    }
 }
