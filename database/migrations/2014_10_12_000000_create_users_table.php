@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+use ErpNET\App\Repositories\BaseMigration;
 
-class CreateUsersTable extends Migration {
+class CreateUsersTable extends BaseMigration {
+
+    protected $table = 'users';
 
 	/**
 	 * Run the migrations.
 	 *
 	 * @return void
 	 */
-	public function up()
+	public function upMigration()
 	{
-		Schema::create('users', function(Blueprint $table)
+        $this->createTable(function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->timestamps();
@@ -30,10 +32,10 @@ class CreateUsersTable extends Migration {
 			$table->string('name');
 			$table->string('avatar')->nullable();
 //			$table->string('email')->unique();
-			$table->string('password', 60)->nullable();
+			$table->string('password')->nullable();
 
             $table->string('username')->nullable();
-            $table->string('email')->unique()->default(time() . '-no-reply@'.config('app.domain'));
+            $table->string('email')->unique()->default(time() . '-no-reply@ilhanet.com');
 //            $table->string('email')->unique()->default(time() . '-no-reply@EasyAuthenticator.com')->change();
 //            $table->string('avatar');
             $table->string('provider')->default('laravel');
@@ -44,8 +46,6 @@ class CreateUsersTable extends Migration {
 			$table->rememberToken();
 
 		});
-
-        echo get_class($this)." is up\n";
 	}
 
 	/**
@@ -53,10 +53,9 @@ class CreateUsersTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
+	public function downMigration()
 	{
-		Schema::drop('users');
-        echo get_class($this)." is down\n";
+        $this->dropTable();
 	}
 
 }
