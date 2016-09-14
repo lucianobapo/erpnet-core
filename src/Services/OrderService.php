@@ -106,7 +106,7 @@ class OrderService implements OrderServiceInterface
 
             $this->processSharedOrderPayment($orderRecord);
 
-            $partnerRecord = $this->processPartner($orderRecord, $sharedStatRecord);
+            $partnerRecord = $this->processPartner($orderRecord);
 
             $this->processUser($partnerRecord);
 
@@ -244,11 +244,14 @@ class OrderService implements OrderServiceInterface
 
     /**
      * @param $orderRecord
-     * @param $sharedStatRecord
      * @return null
      */
-    private function processPartner($orderRecord, $sharedStatRecord)
+    private function processPartner($orderRecord)
     {
+        $sharedStatRecord = $this->sharedStatRepository->firstOrCreate([
+            'status' => 'ativado',
+        ]);
+
         $partnerRecord = null;
         if (property_exists($this->objectData, 'partner_id'))
             $partnerRecord = $this->partnerRepository->find($this->objectData->partner_id);
