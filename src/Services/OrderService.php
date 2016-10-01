@@ -218,25 +218,27 @@ class OrderService implements OrderServiceInterface
     private function processAddress($partnerRecord, $orderRecord)
     {
         $addressRecord = null;
-        if (property_exists($this->objectData, 'address_id')) {
+        if (property_exists($this->objectData, 'address_id') && $this->objectData->address_id>0)
             $addressRecord = $this->addressRepository->find($this->objectData->address_id);
-            if (is_null($addressRecord)) {
-                $addressFields = [];
 
-                $this->tryAssignOrThrow('mandante', $addressFields);
-                $this->tryAssign('cep', $addressFields);
-                $this->tryAssign(['endereco','logradouro'], $addressFields);
-                $this->tryAssign('bairro', $addressFields);
-                $this->tryAssign('numero', $addressFields);
+        if (is_null($addressRecord)) {
+            $addressFields = [];
+
+            $this->tryAssignOrThrow('mandante', $addressFields);
+            $this->tryAssign('cep', $addressFields);
+            $this->tryAssign(['endereco','logradouro'], $addressFields);
+            $this->tryAssign('bairro', $addressFields);
+            $this->tryAssign('numero', $addressFields);
 //                if (property_exists($this->objectData, 'cep')) $data1['cep'] = $this->objectData->cep;
 //                if (property_exists($this->objectData, 'endereco')) $data1['logradouro'] = $this->objectData->endereco;
 //                    else throw new \Exception('Error address is blank');
 //                if (property_exists($this->objectData, 'bairro')) $data1['bairro'] = $this->objectData->bairro;
 //                if (property_exists($this->objectData, 'numero')) $data1['numero'] = $this->objectData->numero;
-                $addressRecord = $this->addressRepository->create($addressFields);
-            }
-            if (is_null($addressRecord)) throw new \Exception('Error with address_id: ' . $this->objectData->address_id);
+            $addressRecord = $this->addressRepository->create($addressFields);
         }
+
+        if (is_null($addressRecord))
+            throw new \Exception('Error with address_id: ' . $this->objectData->address_id);
 
         $this->addressRepository->addPartnerToAddress($partnerRecord, $addressRecord);
         $this->orderRepository->addAddressToOrder($addressRecord, $orderRecord);
