@@ -327,4 +327,13 @@ class BaseEntityRepository extends EntityRepository implements BaseRepositoryInt
         }
         return $data;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function findAllPaginate($count)
+    {
+        return new ArrayCollection(parent::findAll());
+    }
 }

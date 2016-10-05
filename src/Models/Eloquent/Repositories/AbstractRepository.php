@@ -27,9 +27,20 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 
     }
 
+    /**
+     * @inheritdoc
+     */
     public function findAll()
     {
         return $this->model->all();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findAllPaginate($count = 15)
+    {
+        return $this->model->paginate($count);
     }
 
     public function create(array $data)

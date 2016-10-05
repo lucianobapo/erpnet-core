@@ -12,7 +12,16 @@ interface BaseRepositoryInterface
 
     public function find($id);
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection | \Doctrine\Common\Collections\ArrayCollection
+     */
     public function findAll();
+
+    /**
+     * @param int $count
+     * @return \Illuminate\Pagination\LengthAwarePaginator | \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findAllPaginate($count);
 
     public function create(array $data);
 
