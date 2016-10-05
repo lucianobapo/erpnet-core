@@ -53,7 +53,7 @@ class Partner extends Model
      * @return string
      */
     public function getDataNascimentoAttribute() {
-        return Carbon::parse($this->attributes['data_nascimento']);
+        return isset($this->attributes['data_nascimento'])?Carbon::parse($this->attributes['data_nascimento']):null;
     }
 
     public function getFormattedDataNascimento() {
