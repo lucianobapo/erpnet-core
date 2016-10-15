@@ -27,6 +27,10 @@ trait PartnerRelationsTrait
         return $this->belongsToMany(PartnerGroup::class)->withTimestamps();
     }
 
+    public function partnerPartnerGroups() {
+        return $this->groups();
+    }
+
     /**
      * A Partner belongs to a User.
      *
@@ -43,6 +47,10 @@ trait PartnerRelationsTrait
      */
     public function status() {
         return $this->belongsToMany(SharedStat::class)->withTimestamps();
+    }
+
+    public function partnerSharedStats() {
+        return $this->status();
     }
 
     /**

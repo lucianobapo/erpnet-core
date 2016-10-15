@@ -2,6 +2,7 @@
 
 namespace ErpNET\App\Models\Eloquent;
 
+use ErpNET\App\Models\Eloquent\CustomTraits\MapRelationsToArrayTrait;
 use ErpNET\App\Models\Eloquent\CustomTraits\PartnerRelationsTrait;
 use ErpNET\App\Models\Eloquent\CustomTraits\GridSortingTrait;
 use ErpNET\App\Models\Eloquent\CustomTraits\MandanteTrait;
@@ -16,6 +17,7 @@ class Partner extends Model
     use MandanteTrait;
 //    use GridSortingTrait;
 //    use SyncItemsTrait;
+    use MapRelationsToArrayTrait;
     use PartnerRelationsTrait;
 
     /**
