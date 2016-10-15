@@ -14,11 +14,14 @@ trait MapRelationsToArrayTrait
     public function mapToArray($entity, $field, $subField, $interField = null)
     {
         $result = [];
-        foreach ($entity[$field] as $item) {
-            if ($item instanceof \Illuminate\Database\Eloquent\Model)
-                array_push($result, $item[$subField]);
-            else
-                array_push($result, $item[$interField][$subField]);
+
+        if (!is_null($entity) && isset($entity[$field]) && count($entity[$field])>0){
+            foreach ($entity[$field] as $item) {
+                if ($item instanceof \Illuminate\Database\Eloquent\Model)
+                    array_push($result, $item[$subField]);
+                else
+                    array_push($result, $item[$interField][$subField]);
+            }
         }
 
         return $result;
