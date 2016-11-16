@@ -47,6 +47,7 @@ class OrderService implements OrderServiceInterface
 
     public $itemStock;
     protected $objectData;
+    protected $orderRecord;
 
     public function __construct(
         SummaryServiceInterface $summaryService,
@@ -93,20 +94,27 @@ class OrderService implements OrderServiceInterface
      */
     public function createDeliverySalesOrderWithJson($data)
     {
+        if (!env('DELIVERY_OPEN', false)) {
+            $return = json_encode([
+                'error' => true,
+                'message' => 'Estamos em manutenção no momento, retornaremos novamente em: '.env('DELIVERY_RETURN'),
+            ]);
+            return $return;
+        }
         try{
             $this->objectData = json_decode($data);
 
-            $orderRecord = $this->processOrder();
+            $this->orderRecord = $this->processOrder();
 
-            $sharedStatRecord = $this->prcessStatus($orderRecord);
+            $this->sharedStatRecord = $this->prcessStatus();
 
-            $this->processSharedOrder($orderRecord);
+            $this->processSharedOrder();
 
-            $sharedCurrencyRecord = $this->processSharedCurrency($orderRecord);
+            $sharedCurrencyRecord = $this->processSharedCurrency();
 
-            $this->processSharedOrderPayment($orderRecord);
+            $this->processSharedOrderPayment();
 
-            $partnerRecord = $this->processPartner($orderRecord);
+            $partnerRecord = $this->processPartner();
 
             $this->processUser($partnerRecord);
 
@@ -114,11 +122,11 @@ class OrderService implements OrderServiceInterface
             $this->processContact('telefone', $partnerRecord);
             $this->processContact('whatsapp', $partnerRecord);
 
-            $this->processAddress($partnerRecord, $orderRecord);
+            $this->processAddress($partnerRecord);
 
-            $this->processItems($sharedCurrencyRecord, $orderRecord);
+            $this->processItems($sharedCurrencyRecord);
 
-            $addedOrder = $this->orderRepository->find($orderRecord->id);
+            $addedOrder = $this->orderRepository->find($this->orderRecord->id);
 
             $jsonFields = [
                 'error' => false,
@@ -215,7 +223,7 @@ class OrderService implements OrderServiceInterface
      * @param $orderRecord
      * @throws \Exception
      */
-    private function processAddress($partnerRecord, $orderRecord)
+    private function processAddress($partnerRecord)
     {
         $addressRecord = null;
         if (property_exists($this->objectData, 'address_id') && $this->objectData->address_id>0)
@@ -241,14 +249,14 @@ class OrderService implements OrderServiceInterface
             throw new \Exception('Error with address_id: ' . $this->objectData->address_id);
 
         $this->addressRepository->addPartnerToAddress($partnerRecord, $addressRecord);
-        $this->orderRepository->addAddressToOrder($addressRecord, $orderRecord);
+        $this->orderRepository->addAddressToOrder($addressRecord, $this->orderRecord);
     }
 
     /**
      * @param $orderRecord
      * @return null
      */
-    private function processPartner($orderRecord)
+    private function processPartner()
     {
         $sharedStatRecord = $this->sharedStatRepository->firstOrCreate([
             'status' => 'ativado',
@@ -283,7 +291,7 @@ class OrderService implements OrderServiceInterface
             $this->partnerRepository->addPartnerToGroup($partnerRecord, $partnerGroupRecord);
         }
 
-        $this->orderRepository->addPartnerToOrder($partnerRecord, $orderRecord);
+        $this->orderRepository->addPartnerToOrder($partnerRecord, $this->orderRecord);
 
         return $partnerRecord;
     }
@@ -349,18 +357,18 @@ class OrderService implements OrderServiceInterface
     /**
      * @param $orderRecord
      */
-    private function prcessStatus($orderRecord)
+    private function prcessStatus()
     {
         $sharedStatRecord = $this->sharedStatRepository->firstOrCreate([
             'status' => 'aberto',
         ]);
-        $this->orderRepository->addOrderToStat($orderRecord, $sharedStatRecord);
+        $this->orderRepository->addOrderToStat($this->orderRecord, $sharedStatRecord);
 
         if (property_exists($this->objectData, 'origem')) {
             $sharedStatRecordOrigem = $this->sharedStatRepository->firstOrCreate([
                 'status' => $this->objectData->origem,
             ]);
-            $this->orderRepository->addOrderToStat($orderRecord, $sharedStatRecordOrigem);
+            $this->orderRepository->addOrderToStat($this->orderRecord, $sharedStatRecordOrigem);
         }
 
         return $sharedStatRecord;
@@ -369,23 +377,23 @@ class OrderService implements OrderServiceInterface
     /**
      * @param $orderRecord
      */
-    private function processSharedOrder($orderRecord)
+    private function processSharedOrder()
     {
         $sharedOrderTypeRecord = $this->sharedOrderTypeRepository->firstOrCreate([
             'tipo' => 'ordemVenda',
         ]);
-        $this->orderRepository->addSharedOrderTypeToOrder($sharedOrderTypeRecord, $orderRecord);
+        $this->orderRepository->addSharedOrderTypeToOrder($sharedOrderTypeRecord, $this->orderRecord);
     }
 
     /**
      * @param $orderRecord
      */
-    private function processSharedCurrency($orderRecord)
+    private function processSharedCurrency()
     {
         $sharedCurrencyRecord = $this->sharedCurrencyRepository->firstOrCreate([
             'nome_universal' => 'BRL',
         ]);
-        $this->orderRepository->addSharedCurrencyToOrder($sharedCurrencyRecord, $orderRecord);
+        $this->orderRepository->addSharedCurrencyToOrder($sharedCurrencyRecord, $this->orderRecord);
 
         return $sharedCurrencyRecord;
     }
@@ -393,12 +401,12 @@ class OrderService implements OrderServiceInterface
     /**
      * @param $orderRecord
      */
-    private function processSharedOrderPayment($orderRecord)
+    private function processSharedOrderPayment()
     {
         $sharedOrderPaymentRecord = $this->sharedOrderPaymentRepository->firstOrCreate([
             'pagamento' => $this->objectData->pagamento,
         ]);
-        $this->orderRepository->addSharedOrderPaymentToOrder($sharedOrderPaymentRecord, $orderRecord);
+        $this->orderRepository->addSharedOrderPaymentToOrder($sharedOrderPaymentRecord, $this->orderRecord);
     }
 
     /**
@@ -462,7 +470,7 @@ class OrderService implements OrderServiceInterface
      * @param $sharedCurrencyRecord
      * @param $orderRecord
      */
-    private function processItems($sharedCurrencyRecord, $orderRecord)
+    private function processItems($sharedCurrencyRecord)
     {
         if (property_exists($this->objectData, 'itens') && is_array($this->objectData->itens) && count($this->objectData->itens)>0){
             foreach ($this->objectData->itens as $item) {
@@ -485,7 +493,7 @@ class OrderService implements OrderServiceInterface
                 $this->itemOrderRepository->addCostAllocateToItem($productRecord->costAllocate, $itemOrderRecord);
                 $this->itemOrderRepository->addSharedCurrencyToItem($sharedCurrencyRecord, $itemOrderRecord);
 
-                $this->orderRepository->addOrderToItem($orderRecord, $itemOrderRecord);
+                $this->orderRepository->addOrderToItem($this->orderRecord, $itemOrderRecord);
             }
         }
         else throw new \Exception('Error items invalid on processItems()');
