@@ -27,9 +27,9 @@ class ErpnetServiceProvider extends ServiceProvider
 
 //        $this->loadViewsFrom( __DIR__."/../../resources/views", "erpnet");
 
-        $this->publishes([
-            __DIR__."/../../database/migrations" => database_path("migrations")
-        ], 'migrations');
+//        $this->publishes([
+//            __DIR__."/../../database/migrations" => database_path("migrations")
+//        ], 'migrations');
 
         $this->app->register(DoctrineServiceProvider::class);
         $this->app->register(GedmoExtensionsServiceProvider::class);
