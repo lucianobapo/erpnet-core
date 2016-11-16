@@ -33,6 +33,7 @@ class ErpnetServiceProvider extends ServiceProvider
 
         $this->app->register(DoctrineServiceProvider::class);
         $this->app->register(GedmoExtensionsServiceProvider::class);
+
     }
 
     /**
