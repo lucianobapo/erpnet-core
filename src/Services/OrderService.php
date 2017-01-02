@@ -134,6 +134,10 @@ class OrderService implements OrderServiceInterface
                 'id' => $addedOrder->id,
                 'posted_at' => $addedOrder->posted_at,
                 'valor_total' => $addedOrder->valor_total,
+                'observacao' => $addedOrder->observacao,
+                'endereco' => $addedOrder->address->logradouro.', '.$addedOrder->address->numero.' - '.$addedOrder->address->bairro.' / CEP:'.$addedOrder->address->cep,
+                'endereco_compl' => $addedOrder->address->complemento,
+                'endereco_obs' => $addedOrder->address->obs,
             ];
 
             $return = json_encode($jsonFields);

@@ -220,6 +220,7 @@ class OrderServiceTest extends ServiceTestCase
         $this->assertAttributeInternalType('boolean','error',$orderObj);
         $this->assertAttributeInternalType('string','message',$orderObj);
 
+        var_dump($orderObj);
         if ($orderObj->error){
             var_dump($orderObj);
         }
