@@ -128,6 +128,12 @@ class OrderService implements OrderServiceInterface
 
             $addedOrder = $this->orderRepository->find($this->orderRecord->id);
 
+            $items = [];
+            if (isset($addedOrder['itemOrders']) && count($addedOrder->itemOrders)>0)
+                foreach ($addedOrder->itemOrders as $itemOrder) {
+                    $items[] = $itemOrder->quantidade . ' x ' . $itemOrder->valor_unitario . ' - '. $itemOrder->product->nome;
+                }
+
             $jsonFields = [
                 'error' => false,
                 'message' => 'Ordem nº ' . $addedOrder->id . ' criada.',
@@ -138,6 +144,7 @@ class OrderService implements OrderServiceInterface
                 'endereco' => $addedOrder->address->logradouro.', '.$addedOrder->address->numero.' - '.$addedOrder->address->bairro.' / CEP:'.$addedOrder->address->cep,
                 'endereco_compl' => $addedOrder->address->complemento,
                 'endereco_obs' => $addedOrder->address->obs,
+                'items' => $items,
             ];
 
             $return = json_encode($jsonFields);
