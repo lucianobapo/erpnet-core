@@ -135,6 +135,7 @@ class OrderService implements OrderServiceInterface
                     $items[] = $itemOrder->quantidade . ' x ' . $formatter->format($itemOrder->valor_unitario) . ' - '. $itemOrder->product->nome;
                 }
 
+
             $jsonFields = [
                 'error' => false,
                 'message' => 'Ordem nº ' . $addedOrder->id . ' criada.',
