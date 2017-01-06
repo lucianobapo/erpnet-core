@@ -129,9 +129,10 @@ class OrderService implements OrderServiceInterface
             $addedOrder = $this->orderRepository->find($this->orderRecord->id);
 
             $items = [];
-            if (isset($addedOrder['itemOrders']) && count($addedOrder->itemOrders)>0)
+            if (isset($addedOrder->itemOrders) && count($addedOrder->itemOrders)>0)
                 foreach ($addedOrder->itemOrders as $itemOrder) {
-                    $items[] = $itemOrder->quantidade . ' x ' . $itemOrder->valor_unitario . ' - '. $itemOrder->product->nome;
+                    $formatter = new \NumberFormatter(config('app.locale'), \NumberFormatter::CURRENCY);
+                    $items[] = $itemOrder->quantidade . ' x ' . $formatter->format($itemOrder->valor_unitario) . ' - '. $itemOrder->product->nome;
                 }
 
             $jsonFields = [
