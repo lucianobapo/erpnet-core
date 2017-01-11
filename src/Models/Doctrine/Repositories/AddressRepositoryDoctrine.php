@@ -20,6 +20,7 @@ class AddressRepositoryDoctrine extends BaseEntityRepository implements AddressR
         'logradouro',
         'numero',
         'bairro',
+        'complemento',
     ];
 
     /**

@@ -34,6 +34,7 @@ class OrderServiceTest extends ServiceTestCase
         "endereco"=>"Avenida Brasil",
         "bairro"=>"Extensão do Bosque",
         "numero"=>"123",
+        "complemento"=>"teste complemento",
         "observacao"=>"teste",
         "data_nascimento"=>null,
         "itens"=>

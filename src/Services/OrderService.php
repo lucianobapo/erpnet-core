@@ -128,13 +128,14 @@ class OrderService implements OrderServiceInterface
 
             $addedOrder = $this->orderRepository->find($this->orderRecord->id);
 
+            $itemOrders = $this->itemOrderRepository->findBy(['order_id'=>$this->orderRecord->id]);
+
             $items = [];
-            if (isset($addedOrder->itemOrders) && count($addedOrder->itemOrders)>0)
-                foreach ($addedOrder->itemOrders as $itemOrder) {
+            if (count($itemOrders)>0)
+                foreach ($itemOrders as $itemOrder) {
                     $formatter = new \NumberFormatter(config('app.locale'), \NumberFormatter::CURRENCY);
                     $items[] = $itemOrder->quantidade . ' x ' . $formatter->format($itemOrder->valor_unitario) . ' - '. $itemOrder->product->nome;
                 }
-
 
             $jsonFields = [
                 'error' => false,
@@ -250,6 +251,7 @@ class OrderService implements OrderServiceInterface
             $this->tryAssign(['endereco','logradouro'], $addressFields);
             $this->tryAssign('bairro', $addressFields);
             $this->tryAssign('numero', $addressFields);
+            $this->tryAssign('complemento', $addressFields);
 //                if (property_exists($this->objectData, 'cep')) $data1['cep'] = $this->objectData->cep;
 //                if (property_exists($this->objectData, 'endereco')) $data1['logradouro'] = $this->objectData->endereco;
 //                    else throw new \Exception('Error address is blank');

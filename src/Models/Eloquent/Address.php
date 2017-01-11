@@ -27,5 +27,6 @@ class Address extends Model
         'logradouro',
         'numero',
         'bairro',
+        'complemento',
     ];
 }
